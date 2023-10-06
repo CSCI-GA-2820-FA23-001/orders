@@ -22,6 +22,65 @@ class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
 
 
+class PersistentBase:
+    """Base class added persistent methods"""
+
+    def __init__(self):
+        self.id = None  # pylint: disable=invalid-name
+
+    @abstractmethod
+    def serialize(self) -> dict:
+        """Convert an object into a dictionary"""
+
+    @abstractmethod
+    def deserialize(self, data: dict) -> None:
+        """Convert a dictionary into an object"""
+
+    def create(self):
+        """
+        Creates a Account to the database
+        """
+        logger.info("Creating %s", self.name)
+        self.id = None  # id must be none to generate next primary key
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        """
+        Updates a Account to the database
+        """
+        logger.info("Updating %s", self.name)
+        db.session.commit()
+
+    def delete(self):
+        """Removes a Account from the data store"""
+        logger.info("Deleting %s", self.name)
+        db.session.delete(self)
+        db.session.commit()
+
+    @classmethod
+    def init_db(cls, app):
+        """Initializes the database session"""
+        logger.info("Initializing database")
+        cls.app = app
+        # This is where we initialize SQLAlchemy from the Flask app
+        db.init_app(app)
+        app.app_context().push()
+        db.create_all()  # make our sqlalchemy tables
+
+    @classmethod
+    def all(cls):
+        """Returns all of the records in the database"""
+        logger.info("Processing all records")
+        return cls.query.all()
+
+    @classmethod
+    def find(cls, by_id):
+        """Finds a record by it's ID"""
+        logger.info("Processing lookup for id %s ...", by_id)
+        return cls.query.get(by_id)
+
+
 class YourResourceModel(db.Model):
     """
     Class that represents a YourResourceModel
