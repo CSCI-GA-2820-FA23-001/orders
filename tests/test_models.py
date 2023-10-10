@@ -58,6 +58,7 @@ class TestOrder(unittest.TestCase):
             last_updated_time=fake_order.last_updated_time,
             total_price=fake_order.total_price,
         )
+        print(repr(order))
         self.assertIsNotNone(order)
         self.assertEqual(order.id, None)
         self.assertEqual(order.customer_id, fake_order.customer_id)
@@ -125,13 +126,13 @@ class TestOrder(unittest.TestCase):
         orders = Order.all()
         self.assertEqual(len(orders), 0)
 
-    def test_list_all_accounts(self):
+    def test_list_all_orders(self):
         """It should List all Orders in the database"""
         orders = Order.all()
         self.assertEqual(orders, [])
         for order in OrderFactory.create_batch(5):
             order.create()
-        # Assert that there are not 5 accounts in the database
+        # Assert that there are not 5 orders in the database
         orders = Order.all()
         self.assertEqual(len(orders), 5)
 
@@ -202,15 +203,27 @@ class TestOrder(unittest.TestCase):
         self.assertRaises(DataValidationError, item.deserialize, [])
 
     def test_add_order_item(self):
-        """It should Create an account with an address and add it to the database"""
+        """It should Create an order with an item and add it to the database"""
         orders = Order.all()
         self.assertEqual(orders, [])
         order = OrderFactory()
-
-        item = ItemFactory()
-        order.items.append(item)
-
         order.create()
+
+        fake_item = ItemFactory()
+        # pylint: disable=unexpected-keyword-arg
+        item = Item(
+            order_id=order.id,
+            name=fake_item.name,
+            price=fake_item.price,
+            description=fake_item.description,
+            quantity=fake_item.quantity,
+        )
+        # order.items.append(item)
+        item.create()
+        print(repr(item))
+        order.update()
+
+        # order.create()
         # Assert that it was assigned an id and shows up in the database
         self.assertIsNotNone(order.id)
         orders = Order.all()
@@ -234,52 +247,80 @@ class TestOrder(unittest.TestCase):
             order.total_price, item.price * item.quantity + item2.price * item2.quantity
         )
 
-    # def test_update_account_address(self):
-    #     """It should Update an accounts address"""
-    #     accounts = Account.all()
-    #     self.assertEqual(accounts, [])
+    def test_update_order_item(self):
+        """It should Update an order's item"""
+        orders = Order.all()
+        self.assertEqual(orders, [])
 
-    #     account = AccountFactory()
-    #     address = AddressFactory(account=account)
-    #     account.create()
-    #     # Assert that it was assigned an id and shows up in the database
-    #     self.assertIsNotNone(account.id)
-    #     accounts = Account.all()
-    #     self.assertEqual(len(accounts), 1)
+        order = OrderFactory()
+        item = ItemFactory(order=order)
+        order.create()
+        # Assert that it was assigned an id and shows up in the database
+        self.assertIsNotNone(order.id)
+        self.assertEqual(order.creation_time, order.last_updated_time)
+        # self.assertEqual(order.total_price, item.price * item.quantity)
+        orders = Order.all()
+        self.assertEqual(len(orders), 1)
 
-    #     # Fetch it back
-    #     account = Account.find(account.id)
-    #     old_address = account.addresses[0]
-    #     print("%r", old_address)
-    #     self.assertEqual(old_address.city, address.city)
-    #     # Change the city
-    #     old_address.city = "XX"
-    #     account.update()
+        # Fetch it back
+        order = Order.find(order.id)
+        old_item = order.items[0]
+        print("%r", old_item)
+        self.assertEqual(old_item.name, item.name)
+        # Change the city
+        old_item.name = "drink"
+        old_item.update()
+        # order.update()
 
-    #     # Fetch it back again
-    #     account = Account.find(account.id)
-    #     address = account.addresses[0]
-    #     self.assertEqual(address.city, "XX")
+        # Fetch it back again
+        order = Order.find(order.id)
 
-    # def test_delete_account_address(self):
-    #     """It should Delete an accounts address"""
-    #     accounts = Account.all()
-    #     self.assertEqual(accounts, [])
+        item = order.items[0]
+        self.assertEqual(item.name, "drink")
+        item.quantity = 0
+        order.update()
 
-    #     account = AccountFactory()
-    #     address = AddressFactory(account=account)
-    #     account.create()
-    #     # Assert that it was assigned an id and shows up in the database
-    #     self.assertIsNotNone(account.id)
-    #     accounts = Account.all()
-    #     self.assertEqual(len(accounts), 1)
+        order = Order.find(order.id)
+        self.assertNotEqual(order.creation_time, order.last_updated_time)
+        self.assertEqual(order.total_price, 0)
 
-    #     # Fetch it back
-    #     account = Account.find(account.id)
-    #     address = account.addresses[0]
-    #     address.delete()
-    #     account.update()
+    def test_delete_order_item(self):
+        """It should Delete an order's item"""
+        orders = Order.all()
+        self.assertEqual(orders, [])
 
-    #     # Fetch it back again
-    #     account = Account.find(account.id)
-    #     self.assertEqual(len(account.addresses), 0)
+        order = OrderFactory()
+        item = ItemFactory(order=order)
+        order.create()
+        # Assert that it was assigned an id and shows up in the database
+        self.assertIsNotNone(order.id)
+        orders = Order.all()
+        self.assertEqual(len(orders), 1)
+
+        # Fetch it back
+        order = Order.find(order.id)
+        item = order.items[0]
+        item.delete()
+        order.update()
+
+        # Fetch it back again
+        order = Order.find(order.id)
+        self.assertEqual(len(order.items), 0)
+
+    def test_list_all_order_items(self):
+        """It should List all items in the database"""
+        orders = Order.all()
+        self.assertEqual(orders, [])
+
+        order = OrderFactory()
+        order.create()
+
+        self.assertEqual(order.items, [])
+        for item in ItemFactory.create_batch(5):
+            item.create()
+            order.items.append(item)
+            order.update()
+        # Assert that there are not 5 items in the database
+        items = Item.all()
+        self.assertEqual(len(items), 5)
+        self.assertEqual(len(order.items), 5)

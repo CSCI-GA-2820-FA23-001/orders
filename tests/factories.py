@@ -68,7 +68,7 @@ class ItemFactory(factory.Factory):
     id = factory.Sequence(lambda n: n)
     order_id = None
     name = FuzzyChoice(choices=["food", "furniture", "tool"])
-    price = FuzzyFloat(0.01, 1000, 4)
+    price = FuzzyFloat(0.01, 100.00, 4)
     description = FuzzyText("This is a ", 30)
     quantity = FuzzyInteger(1, 10)
     order = factory.SubFactory(OrderFactory)

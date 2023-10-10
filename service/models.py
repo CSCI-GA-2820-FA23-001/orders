@@ -39,22 +39,6 @@ class PersistentBase:
     def deserialize(self, data: dict) -> None:
         """Convert a dictionary into an object"""
 
-    def create(self):
-        """
-        Creates an Order to the database
-        """
-        logger.info("Creating an order")
-        self.id = None  # id must be none to generate next primary key
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self):
-        """
-        Updates an Order to the database
-        """
-        logger.info("Updating an Order %d", self.id)
-        db.session.commit()
-
     def delete(self):
         """Removes an Order from the data store"""
         logger.info("Deleting an Order %d", self.id)
@@ -95,7 +79,7 @@ class Item(db.Model, PersistentBase):
         db.Integer, db.ForeignKey("order.id", ondelete="CASCADE"), nullable=False
     )
     name = db.Column(db.String(64))
-    price = db.Column(db.Double)
+    price = db.Column(db.Float)
     description = db.Column(db.String(128))
     quantity = db.Column(db.Integer)
 
@@ -140,6 +124,22 @@ class Item(db.Model, PersistentBase):
             ) from error
         return self
 
+    def create(self):
+        """
+        Creates an Order to the database
+        """
+        logger.info("Creating an order")
+        self.id = None  # id must be none to generate next primary key
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        """
+        Updates an Order to the database
+        """
+        logger.info("Updating an Order %d", self.id)
+        db.session.commit()
+
 
 class Order(db.Model, PersistentBase):
     """
@@ -154,7 +154,7 @@ class Order(db.Model, PersistentBase):
     creation_time = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     last_updated_time = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     items = db.relationship("Item", backref="order", passive_deletes=True)
-    total_price = db.Column(db.Double)
+    total_price = db.Column(db.Float)
 
     def __repr__(self):
         return f"<Order from {self.customer_id} id=[{self.id}]>"
