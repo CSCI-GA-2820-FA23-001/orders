@@ -208,35 +208,47 @@ class TestOrder(unittest.TestCase):
         self.assertEqual(orders, [])
         order = OrderFactory()
         order.create()
+        print(order.total_price)
 
-        fake_item = ItemFactory()
+        # fake_item = ItemFactory()
         # pylint: disable=unexpected-keyword-arg
         item = Item(
             order_id=order.id,
-            name=fake_item.name,
-            price=fake_item.price,
-            description=fake_item.description,
-            quantity=fake_item.quantity,
+            name="food",
+            price=2.32,
+            description="this is some food",
+            quantity=2,
         )
         # order.items.append(item)
         item.create()
         print(repr(item))
+
         order.update()
+
+        # print(order.total_price)
 
         # order.create()
         # Assert that it was assigned an id and shows up in the database
         self.assertIsNotNone(order.id)
         orders = Order.all()
         self.assertEqual(len(orders), 1)
+        # order = Order.find(order.id)
         self.assertEqual(len(order.items), 1)
         self.assertEqual(order.items[0].price, item.price)
         self.assertEqual(order.items[0].quantity, item.quantity)
+        print(order.total_price)
         self.assertEqual(order.total_price, item.price * item.quantity)
 
         new_order = Order.find(order.id)
         self.assertEqual(new_order.items[0].name, item.name)
 
-        item2 = ItemFactory()
+        item2 = Item(
+            order_id=order.id,
+            name="food",
+            price=4.44,
+            description="this is some food",
+            quantity=2,
+        )
         order.items.append(item2)
         order.update()
 

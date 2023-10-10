@@ -79,7 +79,7 @@ class Item(db.Model, PersistentBase):
         db.Integer, db.ForeignKey("order.id", ondelete="CASCADE"), nullable=False
     )
     name = db.Column(db.String(64))
-    price = db.Column(db.Float)
+    price = db.Column(db.Float(4))
     description = db.Column(db.String(128))
     quantity = db.Column(db.Integer)
 
@@ -154,7 +154,7 @@ class Order(db.Model, PersistentBase):
     creation_time = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     last_updated_time = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     items = db.relationship("Item", backref="order", passive_deletes=True)
-    total_price = db.Column(db.Float)
+    total_price = db.Column(db.Float(4))
 
     def __repr__(self):
         return f"<Order from {self.customer_id} id=[{self.id}]>"
@@ -206,9 +206,11 @@ class Order(db.Model, PersistentBase):
         return self
 
     def get_total_price(self) -> float:
-        total = 0.0
+        """It can calculate the total price of the order"""
+        total = float(0.0)
         for item in self.items:
-            total += item.price * float(item.quantity)
+            total += float(item.price) * float(item.quantity)
+
         return total
 
     def create(self):
@@ -239,7 +241,9 @@ class Order(db.Model, PersistentBase):
         self.last_updated_time = datetime.now()
 
         # Calculate the total_price for the order
+
         self.total_price = self.get_total_price()
+        print(self.total_price)
 
         db.session.commit()
 
