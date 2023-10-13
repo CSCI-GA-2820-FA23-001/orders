@@ -90,7 +90,7 @@ class Item(db.Model, PersistentBase):
         return f"{self.name}: {self.price}, {self.description}, {self.quantity}"
 
     def serialize(self) -> dict:
-        """Converts an Address into a dictionary"""
+        """Converts an Order into a dictionary"""
         return {
             "id": self.id,
             "order_id": self.order_id,
@@ -102,10 +102,10 @@ class Item(db.Model, PersistentBase):
 
     def deserialize(self, data: dict) -> None:
         """
-        Populates an Address from a dictionary
+        Populates an Item from a dictionary
 
         Args:
-            data (dict): A dictionary containing the resource data
+            data (dict): An itemcontaining the resource data
         """
         try:
             self.order_id = data["order_id"]
