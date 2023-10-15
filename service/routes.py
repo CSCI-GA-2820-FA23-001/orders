@@ -51,6 +51,17 @@ def index():
 # Place your REST API code here ...
 
 
+@app.route("/orders", methods=["GET"])
+def list_orders():
+    """Returns all of the Orders"""
+    app.logger.info("Request for Order list")
+    orders = []
+    orders = Order.all()
+    # Return as an array of dictionaries
+    results = [order.serialize() for order in orders]
+    return make_response(jsonify(results), status.HTTP_200_OK)
+
+
 ######################################################################
 # READ AN ORDER
 ######################################################################
@@ -73,6 +84,7 @@ def read_orders(order_id):
 
     return make_response(jsonify(order.serialize()), status.HTTP_200_OK)
 
+
 ######################################################################
 # CREATE A NEW ORDER
 ######################################################################
@@ -88,7 +100,7 @@ def create_orders():
     order.deserialize(request.get_json())
     order.create()
     message = order.serialize()
-    location_url = url_for("list_orders", order_id=order.id, _external=True)
+    location_url = url_for("read_orders", order_id=order.id, _external=True)
 
     app.logger.info("Order with ID [%s] created.", order.id)
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
