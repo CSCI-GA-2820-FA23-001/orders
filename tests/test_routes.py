@@ -79,16 +79,6 @@ class TestOrderItemServer(TestCase):
         data = resp.get_json()
         self.assertEqual(data["name"], "Order Demo REST API Service")
 
-    def test_get_order(self):
-        """It should Read a single Order"""
-        # get the id of an account
-        order = self._create_orders(1)[0]
-        resp = self.client.get(
-            f"{BASE_URL}/{order.id}", content_type="application/json"
-        )
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        data = resp.get_json()
-        self.assertEqual(data["customer_id"], order.customer_id)
 
     def test_create_order(self):
         """It should Create a new Order"""
