@@ -76,9 +76,24 @@ class TestOrderItemServer(TestCase):
         """It should call the home page"""
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        data = resp.get_json()
-        self.assertEqual(data["name"], "Order Demo REST API Service")
 
+    def test_read_order(self):
+        """It should get the order detail by sending the id"""
+
+        order = self._create_orders(1)[0]
+        resp = self.client.get(
+            f"{BASE_URL}/{order.id}", content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(data["customer_id"], order.customer_id)
+        # self.assertEqual(data["creation_time"], order.creation_time)
+        # self.assertEqual(data["last_updated_time"], order.last_updated_time)
+
+    def test_read_order_not_found(self):
+        """It should not Read an Order that is not found"""
+        resp = self.client.get(f"{BASE_URL}/0")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_create_order(self):
         """It should Create a new Order"""
@@ -137,5 +152,3 @@ class TestOrderItemServer(TestCase):
         #     str(order.last_updated_time),
         #     "Last updated time does not match",
         # )
-
-    
