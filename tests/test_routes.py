@@ -77,6 +77,14 @@ class TestOrderItemServer(TestCase):
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
+    def test_get_order_list(self):
+        """It should Get a list of Accounts"""
+        self._create_orders(5)
+        resp = self.client.get(BASE_URL)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), 5)
+
     def test_read_order(self):
         """It should get the order detail by sending the id"""
 
