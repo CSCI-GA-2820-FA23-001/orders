@@ -72,6 +72,14 @@ class TestOrderItemServer(TestCase):
     #  P L A C E   T E S T   C A S E S   H E R E
     ######################################################################
 
+    def test_unsupported_media_type(self):
+        """It should not Create when sending wrong media type"""
+        order = OrderFactory()
+        resp = self.client.post(
+            BASE_URL, json=order.serialize(), content_type="test/html"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
     def test_index(self):
         """It should call the home page"""
         resp = self.client.get("/")
@@ -182,3 +190,13 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(data["price"], item.price)
         self.assertEqual(data["description"], item.description)
         self.assertEqual(data["quantity"], item.quantity)
+
+    def test_add_item_get_order_not_found(self):
+        """It should not add an item when order doesn't exist"""
+        item = ItemFactory()
+        resp = self.client.post(
+            f"{BASE_URL}/0/items",
+            json=item.serialize(),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
