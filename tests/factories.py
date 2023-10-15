@@ -28,7 +28,7 @@ from service.models import Order, Item
 
 
 class OrderFactory(factory.Factory):
-    """Creates fake Accounts"""
+    """Creates fake Orders"""
 
     # pylint: disable=too-few-public-methods
     class Meta:
@@ -48,7 +48,7 @@ class OrderFactory(factory.Factory):
     def items(
         self, create, extracted, **kwargs
     ):  # pylint: disable=method-hidden, unused-argument
-        """Creates the addresses list"""
+        """Creates the item list"""
         if not create:
             return
 
@@ -57,7 +57,7 @@ class OrderFactory(factory.Factory):
 
 
 class ItemFactory(factory.Factory):
-    """Creates fake Addresses"""
+    """Creates fake Items"""
 
     # pylint: disable=too-few-public-methods
     class Meta:

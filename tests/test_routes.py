@@ -1,5 +1,5 @@
 """
-TestYourResourceModel API Service Test Suite
+Order and Item API Service Test Suite
 
 Test cases can be run with the following:
   nosetests -v --with-spec --spec-color
@@ -9,14 +9,14 @@ import os
 import logging
 from unittest import TestCase
 from service import app
-from service.models import db, Order, Item, init_db
+from service.models import db, init_db, Order, Item
 from service.common import status  # HTTP Status Codes
-from tests.factories import OrderFactory, ItemFactory
+from tests.factories import OrderFactory
+
 
 DATABASE_URI = os.getenv(
-    "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
+    "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
 )
-
 BASE_URL = "/orders"
 
 
@@ -24,14 +24,15 @@ BASE_URL = "/orders"
 #  T E S T   C A S E S
 ######################################################################
 # pylint: disable=too-many-public-methods
-class TestOrderService(TestCase):
-    """Order Service Tests"""
+class TestOrderItemServer(TestCase):
+    """Order and Item Server Tests"""
 
     @classmethod
     def setUpClass(cls):
         """This runs once before the entire test suite"""
         app.config["TESTING"] = True
         app.config["DEBUG"] = False
+        # Set up the test database
         app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
         app.logger.setLevel(logging.CRITICAL)
         init_db(app)
@@ -39,37 +40,32 @@ class TestOrderService(TestCase):
     @classmethod
     def tearDownClass(cls):
         """This runs once after the entire test suite"""
+        db.session.close()
 
     def setUp(self):
         """This runs before each test"""
-        db.session.query(Order).delete()  # clean up the last tests
-        db.session.query(Item).delete()
-        db.session.commit()
-
         self.client = app.test_client()
+        db.session.query(Order).delete()  # clean up the last tests
+        db.session.commit()
 
     def tearDown(self):
         """This runs after each test"""
         db.session.remove()
 
-    ######################################################################
-    #  H E L P E R   M E T H O D S
-    ######################################################################
-
     def _create_orders(self, count):
-        """Factory method to create accounts in bulk"""
+        """Factory method to create pets in bulk"""
         orders = []
         for _ in range(count):
-            order = OrderFactory()
-            resp = self.client.post(BASE_URL, json=order.serialize())
+            test_order = OrderFactory()
+            response = self.client.post(BASE_URL, json=test_order.serialize())
             self.assertEqual(
-                resp.status_code,
+                response.status_code,
                 status.HTTP_201_CREATED,
-                "Could not create test Order",
+                "Could not create test pet",
             )
-            new_order = resp.get_json()
-            order.id = new_order["id"]
-            orders.append(order)
+            new_order = response.get_json()
+            test_order.id = new_order["id"]
+            orders.append(test_order)
         return orders
 
     ######################################################################
@@ -98,3 +94,66 @@ class TestOrderService(TestCase):
         """It should not Read an Order that is not found"""
         resp = self.client.get(f"{BASE_URL}/0")
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        data = resp.get_json()
+        self.assertEqual(data["name"], "Order Demo REST API Service")
+
+
+    def test_create_order(self):
+        """It should Create a new Order"""
+        order = OrderFactory()
+        resp = self.client.post(
+            BASE_URL, json=order.serialize(), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # Make sure location header is set
+        location = resp.headers.get("Location", None)
+        self.assertIsNotNone(location)
+
+        # Check the data is correct
+        new_order = resp.get_json()
+        print(new_order)
+        self.assertEqual(
+            new_order["customer_id"],
+            order.customer_id,
+            "Customer Id does not match",
+        )
+        self.assertEqual(
+            new_order["total_price"], order.total_price, "Total price does not match"
+        )
+        self.assertEqual(new_order["items"], order.items, "Items don't not match")
+        # self.assertEqual(
+        #     new_order["creation_time"],
+        #     str(order.creation_time),
+        #     "Creation time does not match",
+        # )
+        # self.assertEqual(
+        #     new_order["last_updated_time"],
+        #     str(order.last_updated_time),
+        #     "Last updated time does not match",
+        # )
+
+        # Check that the location header was correct by getting it
+        resp = self.client.get(location, content_type="application/json")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        new_order = resp.get_json()
+
+        self.assertEqual(
+            new_order["customer_id"], order.customer_id, "Customer Id does not match"
+        )
+        self.assertEqual(
+            new_order["total_price"], order.total_price, "Total price does not match"
+        )
+        self.assertEqual(new_order["items"], order.items, "Items don't not match")
+        # self.assertEqual(
+        #     new_order["creation_time"],
+        #     str(order.creation_time),
+        #     "Creation time does not match",
+        # )
+        # self.assertEqual(
+        #     new_order["last_updated_time"],
+        #     str(order.last_updated_time),
+        #     "Last updated time does not match",
+        # )
+
+    
