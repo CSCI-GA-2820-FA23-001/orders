@@ -11,7 +11,7 @@ from unittest import TestCase
 from service import app
 from service.models import db, init_db, Order, Item
 from service.common import status  # HTTP Status Codes
-from tests.factories import OrderFactory
+from tests.factories import OrderFactory, ItemFactory
 
 
 DATABASE_URI = os.getenv(
@@ -78,7 +78,7 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_get_order_list(self):
-        """It should Get a list of Accounts"""
+        """It should Get a list of Orders"""
         self._create_orders(5)
         resp = self.client.get(BASE_URL)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -160,3 +160,25 @@ class TestOrderItemServer(TestCase):
         #     str(order.last_updated_time),
         #     "Last updated time does not match",
         # )
+
+######################################################################
+    #  I T E M S   T E S T   C A S E S
+######################################################################
+
+    def test_add_items(self):
+        """It should Add an item to an order"""
+        order = self._create_orders(1)[0]
+        item = ItemFactory()
+        resp = self.client.post(
+            f"{BASE_URL}/{order.id}/items",
+            json=item.serialize(),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        data = resp.get_json()
+        logging.debug(data)
+        self.assertEqual(data["order_id"], order.id)
+        self.assertEqual(data["name"], item.name)
+        self.assertEqual(data["price"], item.price)
+        self.assertEqual(data["description"], item.description)
+        self.assertEqual(data["quantity"], item.quantity)
