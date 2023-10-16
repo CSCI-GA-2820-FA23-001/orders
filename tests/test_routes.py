@@ -172,12 +172,16 @@ class TestOrderItemServer(TestCase):
 
         # update the pet
         new_order = resp.get_json()
+        self.assertEqual(new_order["creation_time"], new_order["last_updated_time"])
         new_order["customer_id"] = 100
         new_order_id = new_order["id"]
         resp = self.client.put(f"{BASE_URL}/{new_order_id}", json=new_order)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         updated_order = resp.get_json()
         self.assertEqual(updated_order["customer_id"], 100)
+        self.assertNotEqual(
+            updated_order["creation_time"], updated_order["last_updated_time"]
+        )
 
     ######################################################################
     #  I T E M S   T E S T   C A S E S
