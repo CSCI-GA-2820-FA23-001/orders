@@ -17,5 +17,15 @@
     "cucumberautocomplete.strictGherkinValidation": true,
     "cucumberautocomplete.smartSnippets": true,
     "cucumberautocomplete.gherkinDefinitionPart": "@(given|when|then)\\(",
+    "cSpell.words": [
+        "CSCI",
+        "Parikh",
+        "Rahul",
+        "Rofrano",
+        "Viraj",
+        "Yujing",
+        "Zhang",
+        "Zhou"
+    ],
 }
 
