@@ -137,7 +137,7 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(
             new_order["creation_time"],
             new_order["last_updated_time"],
-            "Creation-time does not Last-updated_time",
+            "Creation-time does not last-updated_time",
         )
 
         # Check that the location header was correct by getting it
@@ -152,16 +152,11 @@ class TestOrderItemServer(TestCase):
             new_order["total_price"], order.total_price, "Total price does not match"
         )
         self.assertEqual(new_order["items"], order.items, "Items don't not match")
-        # self.assertEqual(
-        #     new_order["creation_time"],
-        #     str(order.creation_time),
-        #     "Creation time does not match",
-        # )
-        # self.assertEqual(
-        #     new_order["last_updated_time"],
-        #     str(order.last_updated_time),
-        #     "Last updated time does not match",
-        # )
+        self.assertEqual(
+            new_order["creation_time"],
+            new_order["last_updated_time"],
+            "Creation time does not match last-updated_time",
+        )
 
     def test_update_order(self):
         """It should Update an existing Order"""
