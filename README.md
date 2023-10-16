@@ -3,12 +3,12 @@
 <img src="shopping_cart.png" alt= “map” width="75%" height="75%">
 
 The orders group for the NYU DevOps and Agile Methodologies class!
-This code aims to allow any customer to set up their order (their shopping cart).
-This will include all the necessary functions for a customer to be able to manage their shopping cart, including:
+This code aims to allow any customer to set up their order.
+This will include all the necessary functions for a customer to be able to manage their order, including:
 * They will be able to pick and choose any items that they would like to add to their shopping cart.
-* They will be able to check their shopping cart to see all of the items that they are currently planning on buying.
-* They will be able to update items within their shopping cart if they want to purchase more or less of that certain item.
-* They will be able to delete items they no longer want from their shopping cart.
+* They will be able to check their order to see all of the items that they are currently planning on buying.
+* They will be able to update items within their order if they want to purchase more or less of that certain item.
+* They will be able to delete items they no longer want from their order.
 * They will be able to view past purchases and see what they have previously bought.
 
 ## Build:
