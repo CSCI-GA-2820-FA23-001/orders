@@ -103,8 +103,7 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
         self.assertEqual(data["customer_id"], order.customer_id)
-        # self.assertEqual(data["creation_time"], order.creation_time)
-        # self.assertEqual(data["last_updated_time"], order.last_updated_time)
+        self.assertEqual(data["creation_time"], data["last_updated_time"])
 
     def test_read_order_not_found(self):
         """It should not Read an Order that is not found"""
@@ -135,16 +134,11 @@ class TestOrderItemServer(TestCase):
             new_order["total_price"], order.total_price, "Total price does not match"
         )
         self.assertEqual(new_order["items"], order.items, "Items don't not match")
-        # self.assertEqual(
-        #     new_order["creation_time"],
-        #     str(order.creation_time),
-        #     "Creation time does not match",
-        # )
-        # self.assertEqual(
-        #     new_order["last_updated_time"],
-        #     str(order.last_updated_time),
-        #     "Last updated time does not match",
-        # )
+        self.assertEqual(
+            new_order["creation_time"],
+            new_order["last_updated_time"],
+            "Creation-time does not last-updated_time",
+        )
 
         # Check that the location header was correct by getting it
         resp = self.client.get(location, content_type="application/json")
@@ -158,20 +152,35 @@ class TestOrderItemServer(TestCase):
             new_order["total_price"], order.total_price, "Total price does not match"
         )
         self.assertEqual(new_order["items"], order.items, "Items don't not match")
-        # self.assertEqual(
-        #     new_order["creation_time"],
-        #     str(order.creation_time),
-        #     "Creation time does not match",
-        # )
-        # self.assertEqual(
-        #     new_order["last_updated_time"],
-        #     str(order.last_updated_time),
-        #     "Last updated time does not match",
-        # )
+        self.assertEqual(
+            new_order["creation_time"],
+            new_order["last_updated_time"],
+            "Creation time does not match last-updated_time",
+        )
 
-######################################################################
+    def test_update_order(self):
+        """It should Update an existing Order"""
+        # create an Order to update
+        test_order = OrderFactory()
+        resp = self.client.post(BASE_URL, json=test_order.serialize())
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # update the pet
+        new_order = resp.get_json()
+        self.assertEqual(new_order["creation_time"], new_order["last_updated_time"])
+        new_order["customer_id"] = 100
+        new_order_id = new_order["id"]
+        resp = self.client.put(f"{BASE_URL}/{new_order_id}", json=new_order)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        updated_order = resp.get_json()
+        self.assertEqual(updated_order["customer_id"], 100)
+        self.assertNotEqual(
+            updated_order["creation_time"], updated_order["last_updated_time"]
+        )
+
+    ######################################################################
     #  I T E M S   T E S T   C A S E S
-######################################################################
+    ######################################################################
 
     def test_add_items(self):
         """It should Add an item to an order"""

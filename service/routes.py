@@ -50,6 +50,7 @@ def index():
 
 # Place your REST API code here ...
 
+
 ######################################################################
 # ADD AN ITEM TO AN ORDER
 ######################################################################
@@ -85,6 +86,9 @@ def create_items(order_id):
     return make_response(jsonify(message), status.HTTP_201_CREATED)
 
 
+######################################################################
+# LIST ORDERS
+######################################################################
 @app.route("/orders", methods=["GET"])
 def list_orders():
     """Returns all of the Orders"""
@@ -138,6 +142,32 @@ def create_orders():
 
     app.logger.info("Order with ID [%s] created.", order.id)
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
+
+
+######################################################################
+# UPDATE AN EXISTING ACCOUNT
+######################################################################
+@app.route("/orders/<int:order_id>", methods=["PUT"])
+def update_orders(order_id):
+    """
+    Update an Order
+
+    This endpoint will update an Order based the body that is posted
+    """
+    app.logger.info("Request to update order with id: %s", order_id)
+    check_content_type("application/json")
+
+    # See if the order exists and abort if it doesn't
+    order = Order.find(order_id)
+    if not order:
+        abort(status.HTTP_404_NOT_FOUND, f"Order with id '{order_id}' was not found.")
+
+    # Update from the json in the body of the request
+    order.deserialize(request.get_json())
+    order.id = order_id
+    order.update()
+
+    return make_response(jsonify(order.serialize()), status.HTTP_200_OK)
 
 
 ######################################################################
