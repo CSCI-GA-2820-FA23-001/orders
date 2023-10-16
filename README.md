@@ -32,7 +32,7 @@ If you want to contribute to our code, here are the related guidelines: [Link](.
 ## Our core development team:
 * Matthew Dong [GitHub](https://github.com/Matt-J-Dong)
 * Viraj Parikh [GitHub](https://github.com/VirajYParikh)
-* Zhou Yang [GitHub](https://github.com/JooooosephY)
+* Zhao Yang [GitHub](https://github.com/JooooosephY)
 * Rahul Patel [GitHub](https://github.com/rahul-m-patel)
 * Yujing Zhang [GitHub](https://www.google.com/)
 
