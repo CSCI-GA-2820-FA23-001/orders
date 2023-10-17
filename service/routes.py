@@ -120,7 +120,7 @@ def get_items(order_id, item_id):
     This endpoint returns just an item
     """
     app.logger.info(
-        "Request to delete Item %s for Order id: %s", (item_id, order_id)
+        "Request to get Item %s for Order id: %s", (item_id, order_id)
     )
 
     # See if the item exists and abort if it doesn't
@@ -259,7 +259,7 @@ def delete_items(order_id, item_id):
     """
     app.logger.info("Request to delete Item %s for Order id: %s", (item_id, order_id))
 
-    # See if the address exists and delete it if it does
+    # See if the item exists and delete it if it does
     item = Item.find(item_id)
     if item:
         item.delete()
