@@ -371,3 +371,15 @@ class TestOrderItemServer(TestCase):
             content_type="application/json",
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_order(self):
+        """It should delete the order"""
+
+        order = self._create_orders(1)[0]
+        response = self.client.delete(f"{BASE_URL}/{order.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+        # make sure they are deleted
+        response = self.client.get(f"{BASE_URL}/{order.id}",content_type="application/json")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND) #404 error after the fact
+
