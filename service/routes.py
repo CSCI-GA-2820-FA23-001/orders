@@ -85,6 +85,28 @@ def create_items(order_id):
 
     return make_response(jsonify(message), status.HTTP_201_CREATED)
 
+######################################################################
+# LIST ITEMS
+######################################################################
+@app.route("/orders/<int:order_id>/items", methods=["GET"])
+def list_items(order_id):
+    """Returns all of the items for an order"""
+    app.logger.info("Request for all items for order with id: %s", order_id)
+
+    # See if the order exists and abort if it doesn't
+    order = Order.find(order_id)
+    if not order:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Order with id '{order_id}' could not be found.",
+        )
+
+    # Get the items for the order
+    results = [item.serialize() for item in order.items]
+
+    return make_response(jsonify(results), status.HTTP_200_OK)
+
+
 
 ######################################################################
 # LIST ORDERS
@@ -145,7 +167,7 @@ def create_orders():
 
 
 ######################################################################
-# UPDATE AN EXISTING ACCOUNT
+# UPDATE AN EXISTING ORDER
 ######################################################################
 @app.route("/orders/<int:order_id>", methods=["PUT"])
 def update_orders(order_id):
