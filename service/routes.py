@@ -48,8 +48,6 @@ def index():
 #  R E S T   A P I   E N D P O I N T S
 ######################################################################
 
-# Place your REST API code here ...
-
 
 ######################################################################
 # ADD AN ITEM TO AN ORDER
@@ -110,6 +108,26 @@ def list_items(order_id):
 
 
 ######################################################################
+# DELETE AN ITEM
+######################################################################
+@app.route("/orders/<int:order_id>/items/<int:item_id>", methods=["DELETE"])
+def delete_items(order_id, item_id):
+    """
+    Delete an Item or multiple items
+
+    This endpoint will delete an Item based the item id specified in the path
+    """
+    app.logger.info("Request to delete Item %s for Order id: %s", (item_id, order_id))
+
+    # See if the item exists and delete it if it does
+    item = Item.find(item_id)
+    if item:
+        item.delete()
+
+    return make_response("", status.HTTP_204_NO_CONTENT)
+
+
+######################################################################
 # RETRIEVE AN ITEM FROM ORDER
 ######################################################################
 @app.route("/orders/<int:order_id>/items/<int:item_id>", methods=["GET"])
@@ -119,9 +137,7 @@ def get_items(order_id, item_id):
 
     This endpoint returns just an item
     """
-    app.logger.info(
-        "Request to get Item %s for Order id: %s", (item_id, order_id)
-    )
+    app.logger.info("Request to get Item %s for Order id: %s", (item_id, order_id))
 
     # See if the item exists and abort if it doesn't
     item = Item.find(item_id)
@@ -246,9 +262,11 @@ def update_orders(order_id):
 
     return make_response(jsonify(order.serialize()), status.HTTP_200_OK)
 
+
 ######################################################################
 #  DELETE ORDER
 ######################################################################
+
 
 @app.route("/orders/<int:order_id>", methods=["DELETE"])
 def delete_orders(order_id):
@@ -262,25 +280,6 @@ def delete_orders(order_id):
     order = Order.find(order_id)
     if order:
         order.delete()
-
-    return make_response("", status.HTTP_204_NO_CONTENT)
-
-######################################################################
-# DELETE AN ITEM
-######################################################################
-@app.route("/orders/<int:order_id>/items/<int:item_id>", methods=["DELETE"])
-def delete_items(order_id, item_id):
-    """
-    Delete an Item or multiple items
-
-    This endpoint will delete an Item based the item id specified in the path
-    """
-    app.logger.info("Request to delete Item %s for Order id: %s", (item_id, order_id))
-
-    # See if the item exists and delete it if it does
-    item = Item.find(item_id)
-    if item:
-        item.delete()
 
     return make_response("", status.HTTP_204_NO_CONTENT)
 
