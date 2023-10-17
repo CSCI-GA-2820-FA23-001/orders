@@ -19,6 +19,8 @@ Information on how to build and test the code yourself, if you choose to do so:
 2. Build and run the code
     * Make sure you have Docker Desktop or any other similar container service running.
     * Open the repository in a dev container, this will allow you to run all of the code.
+3. Available Routes
+   * 
 
 ## Testing
 1. Make sure you have the repository container running on your computer first, before attempting to test the code.
