@@ -57,11 +57,8 @@ The test cases have at least 95% test coverage, ensuring most of the repo is cov
 
 1. Make sure you have the repository container running on your computer first, before attempting to test the code.
     * Navigate to the root of the repository, you should be in `./app`.
-2. Run `python -m unittest`. This will run all of the tests for the code within the `./tests` folder, and check for any errors.
-   * Similarly, you can also run `make test` in the root folder to test for the code within the `./tests` folder, and check for any errors.
-   * Similarly, you can also run `make lint` in the root folder to test if the code conforms to PEP8 standards.
-
-## Contributing
+2. Run `make test`. This will run all of the tests for the code within the `./tests` folder, and check for any errors.
+    * Similarly, you can also run `make lint` in the root folder to test if the code conforms to PEP8 standards.
 
 If you want to contribute to our code, here are the related guidelines: [Link](./CONTRIBUTING.md)
 
