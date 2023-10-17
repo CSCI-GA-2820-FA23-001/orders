@@ -1,59 +1,73 @@
-# NYU DevOps Project Template
+# NYU DevOps Orders
 
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
+<img src="shopping_cart.png" alt= “map” width="75%" height="75%">
 
-This is a skeleton you can use to start your projects
+The orders group for the NYU DevOps and Agile Methodologies class!
+This code aims to allow any customer to set up their order.
+This will include all the necessary functions for a customer to be able to manage their order, including:
+* They will be able to pick and choose any items that they would like to add to their shopping cart.
+* They will be able to check their order to see all of the items that they are currently planning on buying.
+* They will be able to update items within their order if they want to purchase more or less of that certain item.
+* They will be able to delete items they no longer want from their order.
+* They will be able to view past purchases and see what they have previously bought.
 
-## Overview
+## Build:
+Information on how to build and test the code yourself, if you choose to do so:
+1. Obtaining the code for this repository:
+    * Clone the code for the repository onto your local machine, using the git CLI, GitHub Desktop, or any method of choice.
+    * Navigate into the project directory `./orders`
+2. Build and run the code
+    * Make sure you have Docker Desktop or any other similar container service running.
+    * Open the repository in a dev container, this will allow you to run all of the code.
 
-This project template contains starter code for your class project. The `/service` folder contains your `models.py` file for your model and a `routes.py` file for your service. The `/tests` folder has test case starter code for testing the model and the service separately. All you need to do is add your functionality. You can use the [lab-flask-tdd](https://github.com/nyu-devops/lab-flask-tdd) for code examples to copy from.
+## Information about the routes of this repository
 
-## Automatic Setup
-
-The best way to use this repo is to start your own repo using it as a git template. To do this just press the green **Use this template** button in GitHub and this will become the source for your repository.
-
-## Manual Setup
-
-You can also clone this repository and then copy and paste the starter code into your project repo folder on your local computer. Be careful not to copy over your own `README.md` file so be selective in what you copy.
-
-There are 4 hidden files that you will need to copy manually if you use the Mac Finder or Windows Explorer to copy files from this folder into your repo folder.
-
-These should be copied using a bash shell as follows:
-
-```bash
-    cp .gitignore  ../<your_repo_folder>/
-    cp .flaskenv ../<your_repo_folder>/
-    cp .gitattributes ../<your_repo_folder>/
-```
-
-## Contents
-
-The project contains the following:
+These are the RESTful routes for `orders`
 
 ```text
-.gitignore          - this will ignore vagrant and other metadata files
-.flaskenv           - Environment variables to configure Flask
-.gitattributes      - File to gix Windows CRLF issues
-.devcontainers/     - Folder with support for VSCode Remote Containers
-dot-env-example     - copy to .env to use environment variables
-requirements.txt    - list if Python libraries required by your code
-config.py           - configuration parameters
-
-service/                   - service python package
-├── __init__.py            - package initializer
-├── models.py              - module with business models
-├── routes.py              - module with service routes
-└── common                 - common code package
-    ├── error_handlers.py  - HTTP error handling code
-    ├── log_handlers.py    - logging setup code
-    └── status.py          - HTTP status constants
-
-tests/              - test cases package
-├── __init__.py     - package initializer
-├── test_models.py  - test suite for business models
-└── test_routes.py  - test suite for service routes
+Endpoint       Methods  Rule                                      
+-------------  -------  ------------------------------------------
+create_orders  POST     /orders                                   
+delete_orders  DELETE   /orders/<int:order_id>                    
+index          GET      /                                                       
+list_orders    GET      /orders                                   
+read_orders    GET      /orders/<int:order_id>                    
+static         GET      /static/<path:filename>                   
+update_orders  PUT      /orders/<int:order_id>
 ```
+
+These are the RESTful routes for the `items` within orders
+
+```text
+Endpoint       Methods  Rule                                      
+-------------  -------  ------------------------------------------
+create_items   POST     /orders/<int:order_id>/items                                              
+delete_items   DELETE   /orders/<int:order_id>/items/<int:item_id>                   
+get_items      GET      /orders/<int:order_id>/items/<int:item_id>                                     
+list_items     GET      /orders/<int:order_id>/items                                              
+update_items   PUT      /orders/<int:order_id>/items/<int:item_id>
+```
+
+The test cases have at least 95% test coverage, ensuring most of the repo is covered and following test-driven-development.
+
+## Testing
+1. Make sure you have the repository container running on your computer first, before attempting to test the code.
+    * Navigate to the root of the repository, you should be in `./app`.
+2. Run `python -m unittest`. This will run all of the tests for the code within the `./tests` folder, and check for any errors.
+    * Similarly, you can also run `make lint` in the root folder to test if the code conforms to PEP8 standards.
+
+## Contributing:
+If you want to contribute to our code, here are the related guidelines: [Link](./CONTRIBUTING.md)
+
+## Our core development team:
+* Matthew Dong [GitHub](https://github.com/Matt-J-Dong)
+* Viraj Parikh [GitHub](https://github.com/VirajYParikh)
+* Zhao Yang [GitHub](https://github.com/JooooosephY)
+* Rahul Patel [GitHub](https://github.com/rahul-m-patel)
+* Yujing Zhang [GitHub](https://www.google.com/)
+
+## Database Schema:
+<img src="database_schema.png" alt= “map” width="75%" height="75%">
 
 ## License
 
