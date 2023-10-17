@@ -9,8 +9,7 @@ import os
 import logging
 from unittest import TestCase
 from service import app
-from service.models import db, init_db, Order
-# from service.models import Item
+from service.models import db, init_db, Order, Item
 from service.common import status  # HTTP Status Codes
 from tests.factories import OrderFactory, ItemFactory
 
