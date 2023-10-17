@@ -82,8 +82,10 @@ def create_items(order_id):
 
     # Prepare a message to return
     message = item.serialize()
+    print(message)
 
     return make_response(jsonify(message), status.HTTP_201_CREATED)
+
 
 ######################################################################
 # LIST ITEMS
@@ -106,6 +108,7 @@ def list_items(order_id):
 
     return make_response(jsonify(results), status.HTTP_200_OK)
 
+
 ######################################################################
 # RETRIEVE AN ITEM FROM ORDER
 ######################################################################
@@ -117,7 +120,7 @@ def get_items(order_id, item_id):
     This endpoint returns just an item
     """
     app.logger.info(
-        "Request to retrieve item %s for order id: %s", (item_id, order_id)
+        "Request to delete Item %s for Order id: %s", (item_id, order_id)
     )
 
     # See if the item exists and abort if it doesn't
@@ -141,9 +144,7 @@ def update_items(order_id, item_id):
 
     This endpoint will update an item based the body that is posted
     """
-    app.logger.info(
-        "Request to update item %s for order id: %s", (item_id, order_id)
-    )
+    app.logger.info("Request to update item %s for order id: %s", (item_id, order_id))
     check_content_type("application/json")
 
     # See if the item exists and abort if it doesn't
@@ -160,6 +161,7 @@ def update_items(order_id, item_id):
     item.update()
 
     return make_response(jsonify(item.serialize()), status.HTTP_200_OK)
+
 
 ######################################################################
 # LIST ORDERS
@@ -243,6 +245,26 @@ def update_orders(order_id):
     order.update()
 
     return make_response(jsonify(order.serialize()), status.HTTP_200_OK)
+
+
+######################################################################
+# DELETE AN ITEM
+######################################################################
+@app.route("/orders/<int:order_id>/items/<int:item_id>", methods=["DELETE"])
+def delete_items(order_id, item_id):
+    """
+    Delete an Item or multiple items
+
+    This endpoint will delete an Item based the item id specified in the path
+    """
+    app.logger.info("Request to delete Item %s for Order id: %s", (item_id, order_id))
+
+    # See if the address exists and delete it if it does
+    item = Item.find(item_id)
+    if item:
+        item.delete()
+
+    return make_response("", status.HTTP_204_NO_CONTENT)
 
 
 ######################################################################
