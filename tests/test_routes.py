@@ -219,7 +219,7 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(len(response.data), 0)
         # make sure they are deleted
         response = self.client.get(f"{BASE_URL}/{order.id}",content_type="application/json")
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND) #404 error after the fact
 
         '''
         Old long-winded code that has the same bug
