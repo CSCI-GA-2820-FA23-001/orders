@@ -62,7 +62,7 @@ The test cases have at least 95% test coverage, ensuring most of the repo is cov
 
 If you want to contribute to our code, here are the related guidelines: [Link](./CONTRIBUTING.md)
 
-## Our core development team:
+## Our core development team
 
 * Matthew Dong [GitHub](https://github.com/Matt-J-Dong)
 * Viraj Parikh [GitHub](https://github.com/VirajYParikh)

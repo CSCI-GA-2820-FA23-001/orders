@@ -117,7 +117,7 @@ def delete_items(order_id, item_id):
 
     This endpoint will delete an Item based the item id specified in the path
     """
-    app.logger.info("Request to delete Item %s for Order id: %s", (item_id, order_id))
+    app.logger.info("Request to delete Item %s for Order id: %s", item_id, order_id)
 
     # See if the item exists and delete it if it does
     item = Item.find(item_id)
@@ -137,7 +137,7 @@ def get_items(order_id, item_id):
 
     This endpoint returns just an item
     """
-    app.logger.info("Request to get Item %s for Order id: %s", (item_id, order_id))
+    app.logger.info("Request to get Item %s for Order id: %s", item_id, order_id)
 
     # See if the item exists and abort if it doesn't
     item = Item.find(item_id)
@@ -160,7 +160,7 @@ def update_items(order_id, item_id):
 
     This endpoint will update an item based the body that is posted
     """
-    app.logger.info("Request to update item %s for order id: %s", (item_id, order_id))
+    app.logger.info("Request to update item %s for order id: %s", item_id, order_id)
     check_content_type("application/json")
 
     # See if the item exists and abort if it doesn't
@@ -274,7 +274,7 @@ def delete_orders(order_id):
     Deletes an Order
     This endpoint will delete an Order with the ID given.
     """
-    app.logger.info(f"Request to delete an order with order ID {order_id}")
+    app.logger.info("Request to delete an order with order ID %d", order_id)
 
     # See if the order exists and delete if it exists
     order = Order.find(order_id)
