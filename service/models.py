@@ -256,11 +256,11 @@ class Order(db.Model, PersistentBase):
         """
         logger.info("Processing customer_id query for %d ...", customer_id)
         return cls.query.filter(cls.customer_id == customer_id)
-    
+
     def delete(self):
         """
         Deletes an Order in the database
         """
-        logger.info(f"Deleting an order with the order ID {self.id}")
+        logger.info("Deleting an order with the order ID %d", self.id)
         db.session.delete(self)
         db.session.commit()
