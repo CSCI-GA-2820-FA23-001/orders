@@ -257,7 +257,7 @@ class TestOrderItemServer(TestCase):
 
     def test_get_item(self):
         """It should get an item from an order"""
-        # create a known address
+        # create a known item
         order = self._create_orders(1)[0]
         item = ItemFactory()
         resp = self.client.post(
@@ -290,6 +290,53 @@ class TestOrderItemServer(TestCase):
         """It should not get an item if it's not present"""
         order = self._create_orders(1)[0]
         resp = self.client.get(
+            f"{BASE_URL}/{order.id}/items/0",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_item(self):
+        """It should Update an item in an order"""
+        # create a known item
+        order = self._create_orders(1)[0]
+        item = ItemFactory()
+        resp = self.client.post(
+            f"{BASE_URL}/{order.id}/items",
+            json=item.serialize(),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        data = resp.get_json()
+        logging.debug(data)
+        item_id = data["id"]
+        data["name"] = "XXXX"
+
+        # send the update back
+        resp = self.client.put(
+            f"{BASE_URL}/{order.id}/items/{item_id}",
+            json=data,
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+        # retrieve it back
+        resp = self.client.get(
+            f"{BASE_URL}/{order.id}/items/{item_id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+        data = resp.get_json()
+        logging.debug(data)
+        self.assertEqual(data["id"], item_id)
+        self.assertEqual(data["order_id"], order.id)
+        self.assertEqual(data["name"], "XXXX")
+
+    def test_item_not_found_when_updating(self):
+        """It should not get an item if it's not present"""
+        order = self._create_orders(1)[0]
+        resp = self.client.put(
             f"{BASE_URL}/{order.id}/items/0",
             content_type="application/json",
         )
