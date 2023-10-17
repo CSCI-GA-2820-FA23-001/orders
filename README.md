@@ -19,8 +19,28 @@ Information on how to build and test the code yourself, if you choose to do so:
 2. Build and run the code
     * Make sure you have Docker Desktop or any other similar container service running.
     * Open the repository in a dev container, this will allow you to run all of the code.
-3. Available Routes
-   * 
+
+## Information about the routes of this repository
+
+These are the RESTful routes for `orders`
+```
+Endpoint       Methods  Rule                                      
+-------------  -------  ------------------------------------------
+create_items   POST     /orders/<int:order_id>/items              
+create_orders  POST     /orders                                   
+delete_items   DELETE   /orders/<int:order_id>/items/<int:item_id>
+delete_orders  DELETE   /orders/<int:order_id>                    
+get_items      GET      /orders/<int:order_id>/items/<int:item_id>
+index          GET      /                                         
+list_items     GET      /orders/<int:order_id>/items              
+list_orders    GET      /orders                                   
+read_orders    GET      /orders/<int:order_id>                    
+static         GET      /static/<path:filename>                   
+update_items   PUT      /orders/<int:order_id>/items/<int:item_id>
+update_orders  PUT      /orders/<int:order_id>
+```
+
+The test cases have at least 95% test coverage, ensuring most of the repo is covered and following test-driven-development.
 
 ## Testing
 1. Make sure you have the repository container running on your computer first, before attempting to test the code.
