@@ -22,17 +22,36 @@ Information on how to build and test the code yourself, if you choose to do so:
 2. Build and run the code
     * Make sure you have Docker Desktop or any other similar container service running.
     * Open the repository in a dev container, this will allow you to run all of the code.
-3. Available Routes
-   * GET /orders - Returns a list all of the Orders
-   * GET /orders/{id} - Returns the Order information with a given id number
-   * POST /orders - creates a new Order record in the database
-   * PUT /orders/{id} - updates an Order record in the database
-   * DELETE /orders/{id} - deletes an Order record in the database
-   * GET /orders/{id}/items - Returns a list all of the Items in the Order with a given id number
-   * GET /item/{item id} - Returns an Item information with a given item id number
-   * POST orders/{id}/items - creates a new Item record in the Order with a given id number
-   * PUT /orders/{id}/items/{item id} - updates an Item record with a given item id in the Order with a given id number
-   * DELETE /orders/{id}/items/{item id} - deletes an Item record with a given item id in the Order with a given id number
+
+## Information about the routes of this repository
+
+These are the RESTful routes for `orders`
+
+```text
+Endpoint       Methods  Rule                                      
+-------------  -------  ------------------------------------------
+create_orders  POST     /orders                                   
+delete_orders  DELETE   /orders/<int:order_id>                    
+index          GET      /                                                       
+list_orders    GET      /orders                                   
+read_orders    GET      /orders/<int:order_id>                    
+static         GET      /static/<path:filename>                   
+update_orders  PUT      /orders/<int:order_id>
+```
+
+These are the RESTful routes for the `items` within orders
+
+```text
+Endpoint       Methods  Rule                                      
+-------------  -------  ------------------------------------------
+create_items   POST     /orders/<int:order_id>/items                                              
+delete_items   DELETE   /orders/<int:order_id>/items/<int:item_id>                   
+get_items      GET      /orders/<int:order_id>/items/<int:item_id>                                     
+list_items     GET      /orders/<int:order_id>/items                                              
+update_items   PUT      /orders/<int:order_id>/items/<int:item_id>
+```
+
+The test cases have at least 95% test coverage, ensuring most of the repo is covered and following test-driven-development.
 
 ## Testing
 
