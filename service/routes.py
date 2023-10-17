@@ -82,8 +82,85 @@ def create_items(order_id):
 
     # Prepare a message to return
     message = item.serialize()
+    print(message)
 
     return make_response(jsonify(message), status.HTTP_201_CREATED)
+
+
+######################################################################
+# LIST ITEMS
+######################################################################
+@app.route("/orders/<int:order_id>/items", methods=["GET"])
+def list_items(order_id):
+    """Returns all of the items for an order"""
+    app.logger.info("Request for all items for order with id: %s", order_id)
+
+    # See if the order exists and abort if it doesn't
+    order = Order.find(order_id)
+    if not order:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Order with id '{order_id}' could not be found.",
+        )
+
+    # Get the items for the order
+    results = [item.serialize() for item in order.items]
+
+    return make_response(jsonify(results), status.HTTP_200_OK)
+
+
+######################################################################
+# RETRIEVE AN ITEM FROM ORDER
+######################################################################
+@app.route("/orders/<int:order_id>/items/<int:item_id>", methods=["GET"])
+def get_items(order_id, item_id):
+    """
+    Get an Item
+
+    This endpoint returns just an item
+    """
+    app.logger.info(
+        "Request to get Item %s for Order id: %s", (item_id, order_id)
+    )
+
+    # See if the item exists and abort if it doesn't
+    item = Item.find(item_id)
+    if not item:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Item with id '{item_id}' could not be found.",
+        )
+
+    return make_response(jsonify(item.serialize()), status.HTTP_200_OK)
+
+
+######################################################################
+# UPDATE AN ITEM
+######################################################################
+@app.route("/orders/<int:order_id>/items/<int:item_id>", methods=["PUT"])
+def update_items(order_id, item_id):
+    """
+    Update an Item
+
+    This endpoint will update an item based the body that is posted
+    """
+    app.logger.info("Request to update item %s for order id: %s", (item_id, order_id))
+    check_content_type("application/json")
+
+    # See if the item exists and abort if it doesn't
+    item = Item.find(item_id)
+    if not item:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Item with id '{item_id}' could not be found.",
+        )
+
+    # Update from the json in the body of the request
+    item.deserialize(request.get_json())
+    item.id = item_id
+    item.update()
+
+    return make_response(jsonify(item.serialize()), status.HTTP_200_OK)
 
 
 ######################################################################
@@ -145,7 +222,7 @@ def create_orders():
 
 
 ######################################################################
-# UPDATE AN EXISTING ACCOUNT
+# UPDATE AN EXISTING ORDER
 ######################################################################
 @app.route("/orders/<int:order_id>", methods=["PUT"])
 def update_orders(order_id):
@@ -196,6 +273,26 @@ def delete_orders(order_id):
 
     app.logger.info("Order with ID [%s] deleted.", order.id)
     return make_response(jsonify(message), status.HTTP_204_NO_CONTENT)
+
+######################################################################
+# DELETE AN ITEM
+######################################################################
+@app.route("/orders/<int:order_id>/items/<int:item_id>", methods=["DELETE"])
+def delete_items(order_id, item_id):
+    """
+    Delete an Item or multiple items
+
+    This endpoint will delete an Item based the item id specified in the path
+    """
+    app.logger.info("Request to delete Item %s for Order id: %s", (item_id, order_id))
+
+    # See if the item exists and delete it if it does
+    item = Item.find(item_id)
+    if item:
+        item.delete()
+
+    return make_response("", status.HTTP_204_NO_CONTENT)
+
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
