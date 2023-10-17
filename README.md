@@ -23,21 +23,29 @@ Information on how to build and test the code yourself, if you choose to do so:
 ## Information about the routes of this repository
 
 These are the RESTful routes for `orders`
-```
+
+```text
 Endpoint       Methods  Rule                                      
 -------------  -------  ------------------------------------------
-create_items   POST     /orders/<int:order_id>/items              
 create_orders  POST     /orders                                   
-delete_items   DELETE   /orders/<int:order_id>/items/<int:item_id>
 delete_orders  DELETE   /orders/<int:order_id>                    
-get_items      GET      /orders/<int:order_id>/items/<int:item_id>
-index          GET      /                                         
-list_items     GET      /orders/<int:order_id>/items              
+index          GET      /                                                       
 list_orders    GET      /orders                                   
 read_orders    GET      /orders/<int:order_id>                    
 static         GET      /static/<path:filename>                   
-update_items   PUT      /orders/<int:order_id>/items/<int:item_id>
 update_orders  PUT      /orders/<int:order_id>
+```
+
+These are the RESTful routes for the `items` within orders
+
+```text
+Endpoint       Methods  Rule                                      
+-------------  -------  ------------------------------------------
+create_items   POST     /orders/<int:order_id>/items                                              
+delete_items   DELETE   /orders/<int:order_id>/items/<int:item_id>                   
+get_items      GET      /orders/<int:order_id>/items/<int:item_id>                                     
+list_items     GET      /orders/<int:order_id>/items                                              
+update_items   PUT      /orders/<int:order_id>/items/<int:item_id>
 ```
 
 The test cases have at least 95% test coverage, ensuring most of the repo is covered and following test-driven-development.
