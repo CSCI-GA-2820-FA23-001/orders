@@ -104,8 +104,7 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
         self.assertEqual(data["customer_id"], order.customer_id)
-        # self.assertEqual(data["creation_time"], order.creation_time)
-        # self.assertEqual(data["last_updated_time"], order.last_updated_time)
+        self.assertEqual(data["creation_time"], data["last_updated_time"])
 
     def test_read_order_not_found(self):
         """It should not Read an Order that is not found"""
@@ -136,16 +135,11 @@ class TestOrderItemServer(TestCase):
             new_order["total_price"], order.total_price, "Total price does not match"
         )
         self.assertEqual(new_order["items"], order.items, "Items don't not match")
-        # self.assertEqual(
-        #     new_order["creation_time"],
-        #     str(order.creation_time),
-        #     "Creation time does not match",
-        # )
-        # self.assertEqual(
-        #     new_order["last_updated_time"],
-        #     str(order.last_updated_time),
-        #     "Last updated time does not match",
-        # )
+        self.assertEqual(
+            new_order["creation_time"],
+            new_order["last_updated_time"],
+            "Creation-time does not last-updated_time",
+        )
 
         # Check that the location header was correct by getting it
         resp = self.client.get(location, content_type="application/json")
@@ -159,20 +153,35 @@ class TestOrderItemServer(TestCase):
             new_order["total_price"], order.total_price, "Total price does not match"
         )
         self.assertEqual(new_order["items"], order.items, "Items don't not match")
-        # self.assertEqual(
-        #     new_order["creation_time"],
-        #     str(order.creation_time),
-        #     "Creation time does not match",
-        # )
-        # self.assertEqual(
-        #     new_order["last_updated_time"],
-        #     str(order.last_updated_time),
-        #     "Last updated time does not match",
-        # )
+        self.assertEqual(
+            new_order["creation_time"],
+            new_order["last_updated_time"],
+            "Creation time does not match last-updated_time",
+        )
 
-######################################################################
+    def test_update_order(self):
+        """It should Update an existing Order"""
+        # create an Order to update
+        test_order = OrderFactory()
+        resp = self.client.post(BASE_URL, json=test_order.serialize())
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # update the pet
+        new_order = resp.get_json()
+        self.assertEqual(new_order["creation_time"], new_order["last_updated_time"])
+        new_order["customer_id"] = 100
+        new_order_id = new_order["id"]
+        resp = self.client.put(f"{BASE_URL}/{new_order_id}", json=new_order)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        updated_order = resp.get_json()
+        self.assertEqual(updated_order["customer_id"], 100)
+        self.assertNotEqual(
+            updated_order["creation_time"], updated_order["last_updated_time"]
+        )
+
+    ######################################################################
     #  I T E M S   T E S T   C A S E S
-######################################################################
+    ######################################################################
 
     def test_add_items(self):
         """It should Add an item to an order"""
@@ -198,6 +207,167 @@ class TestOrderItemServer(TestCase):
         resp = self.client.post(
             f"{BASE_URL}/0/items",
             json=item.serialize(),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_items_list(self):
+        """It should get a list of items"""
+        # add two items to order
+        order = self._create_orders(1)[0]
+        item_list = ItemFactory.create_batch(2)
+
+        # Create item 1
+        resp = self.client.post(
+            f"{BASE_URL}/{order.id}/items", json=item_list[0].serialize()
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # Create item 2
+        resp = self.client.post(
+            f"{BASE_URL}/{order.id}/items", json=item_list[1].serialize()
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # get the list back and make sure there are 2
+        resp = self.client.get(f"{BASE_URL}/{order.id}/items")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+        data = resp.get_json()
+        self.assertEqual(len(data), 2)
+
+    def test_list_items_get_order_not_found(self):
+        """It should not list items when order doesn't exist"""
+        item = ItemFactory()
+        resp = self.client.get(
+            f"{BASE_URL}/0/items",
+            json=item.serialize(),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_order_get_order_not_found(self):
+        """It should not list items when order doesn't exist"""
+        test_order = OrderFactory()
+        resp = self.client.put(
+            f"{BASE_URL}/0",
+            json=test_order.serialize(),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_item(self):
+        """It should get an item from an order"""
+        # create a known item
+        order = self._create_orders(1)[0]
+        item = ItemFactory()
+        resp = self.client.post(
+            f"{BASE_URL}/{order.id}/items",
+            json=item.serialize(),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        data = resp.get_json()
+        logging.debug(data)
+        item_id = data["id"]
+
+        # retrieve it back
+        resp = self.client.get(
+            f"{BASE_URL}/{order.id}/items/{item_id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+        data = resp.get_json()
+        logging.debug(data)
+        self.assertEqual(data["order_id"], order.id)
+        self.assertEqual(data["name"], item.name)
+        self.assertEqual(data["price"], item.price)
+        self.assertEqual(data["description"], item.description)
+        self.assertEqual(data["quantity"], item.quantity)
+
+    def test_item_not_found(self):
+        """It should not get an item if it's not present"""
+        order = self._create_orders(1)[0]
+        resp = self.client.get(
+            f"{BASE_URL}/{order.id}/items/0",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_item(self):
+        """It should Update an item in an order"""
+        # create a known item
+        order = self._create_orders(1)[0]
+        item = ItemFactory()
+        resp = self.client.post(
+            f"{BASE_URL}/{order.id}/items",
+            json=item.serialize(),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        data = resp.get_json()
+        logging.debug(data)
+        item_id = data["id"]
+        data["name"] = "XXXX"
+
+        # send the update back
+        resp = self.client.put(
+            f"{BASE_URL}/{order.id}/items/{item_id}",
+            json=data,
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+        # retrieve it back
+        resp = self.client.get(
+            f"{BASE_URL}/{order.id}/items/{item_id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+        data = resp.get_json()
+        logging.debug(data)
+        self.assertEqual(data["id"], item_id)
+        self.assertEqual(data["order_id"], order.id)
+        self.assertEqual(data["name"], "XXXX")
+
+    def test_item_not_found_when_updating(self):
+        """It should not get an item if it's not present"""
+        order = self._create_orders(1)[0]
+        resp = self.client.put(
+            f"{BASE_URL}/{order.id}/items/0",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_item(self):
+        """It should Delete an Item"""
+        order = self._create_orders(1)[0]
+        item = ItemFactory()
+
+        resp = self.client.post(
+            f"{BASE_URL}/{order.id}/items",
+            json=item.serialize(),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        data = resp.get_json()
+        logging.debug(data)
+        item_id = data["id"]
+
+        # send delete request
+        resp = self.client.delete(
+            f"{BASE_URL}/{order.id}/items/{item_id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+
+        # retrieve it back and make sure item is not there
+        resp = self.client.get(
+            f"{BASE_URL}/{order.id}/items/{item_id}",
             content_type="application/json",
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
