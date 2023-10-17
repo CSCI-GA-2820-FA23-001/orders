@@ -120,13 +120,44 @@ def get_items(order_id, item_id):
         "Request to retrieve item %s for order id: %s", (item_id, order_id)
     )
 
-    # See if the address exists and abort if it doesn't
+    # See if the item exists and abort if it doesn't
     item = Item.find(item_id)
     if not item:
         abort(
             status.HTTP_404_NOT_FOUND,
             f"Item with id '{item_id}' could not be found.",
         )
+
+    return make_response(jsonify(item.serialize()), status.HTTP_200_OK)
+
+
+######################################################################
+# UPDATE AN ITEM
+######################################################################
+@app.route("/orders/<int:order_id>/items/<int:item_id>", methods=["PUT"])
+def update_items(order_id, item_id):
+    """
+    Update an Item
+
+    This endpoint will update an item based the body that is posted
+    """
+    app.logger.info(
+        "Request to update item %s for order id: %s", (item_id, order_id)
+    )
+    check_content_type("application/json")
+
+    # See if the item exists and abort if it doesn't
+    item = Item.find(item_id)
+    if not item:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Item with id '{item_id}' could not be found.",
+        )
+
+    # Update from the json in the body of the request
+    item.deserialize(request.get_json())
+    item.id = item_id
+    item.update()
 
     return make_response(jsonify(item.serialize()), status.HTTP_200_OK)
 
