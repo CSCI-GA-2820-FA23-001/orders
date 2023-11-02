@@ -184,8 +184,6 @@ class Order(db.Model, PersistentBase):
         """
         try:
             self.customer_id = data["customer_id"]
-            self.creation_time = datetime.fromisoformat(data["creation_time"])
-            self.last_updated_time = datetime.fromisoformat(data["last_updated_time"])
             self.total_price = data["total_price"]
             # handle inner list of addresses
             item_list = data.get("items")

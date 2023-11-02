@@ -178,8 +178,6 @@ class TestOrder(unittest.TestCase):
         new_order = Order()
         new_order.deserialize(serial_order)
         self.assertEqual(new_order.customer_id, order.customer_id)
-        self.assertEqual(new_order.creation_time, order.creation_time)
-        self.assertEqual(new_order.last_updated_time, order.last_updated_time)
         self.assertEqual(new_order.total_price, order.total_price)
 
     def test_deserialize_order_with_key_error(self):
