@@ -155,6 +155,7 @@ class Order(db.Model, PersistentBase):
     last_updated_time = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     items = db.relationship("Item", backref="order", passive_deletes=True)
     total_price = db.Column(db.Float(4))
+    status = db.Column(db.String(32))
 
     def __repr__(self):
         return f"<Order from {self.customer_id} id=[{self.id}]>"
