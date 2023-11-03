@@ -167,6 +167,7 @@ class Order(db.Model, PersistentBase):
             "customer_id": self.customer_id,
             "creation_time": self.creation_time.isoformat(),
             "last_updated_time": self.last_updated_time.isoformat(),
+            "status": self.status,
             "items": [],
             "total_price": self.total_price,
         }
@@ -186,6 +187,7 @@ class Order(db.Model, PersistentBase):
         try:
             self.customer_id = data["customer_id"]
             self.total_price = data["total_price"]
+            self.status = data["status"]
             # handle inner list of addresses
             item_list = data.get("items")
             for json_item in item_list:
