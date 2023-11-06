@@ -41,6 +41,9 @@ class OrderFactory(factory.Factory):
     creation_time = datetime.now()
     last_updated_time = datetime.now()
     total_price = 0.0
+    status = FuzzyChoice(
+        choices=["shipped", "cancelled", "finished", "delivered", "submitted"]
+    )
     # the many side of relationships can be a little wonky in factory boy:
     # https://factoryboy.readthedocs.io/en/latest/recipes.html#simple-many-to-many-relationship
 

@@ -155,6 +155,7 @@ class Order(db.Model, PersistentBase):
     last_updated_time = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     items = db.relationship("Item", backref="order", passive_deletes=True)
     total_price = db.Column(db.Float(4))
+    status = db.Column(db.String(32))
 
     def __repr__(self):
         return f"<Order from {self.customer_id} id=[{self.id}]>"
@@ -166,6 +167,7 @@ class Order(db.Model, PersistentBase):
             "customer_id": self.customer_id,
             "creation_time": self.creation_time.isoformat(),
             "last_updated_time": self.last_updated_time.isoformat(),
+            "status": self.status,
             "items": [],
             "total_price": self.total_price,
         }
@@ -185,6 +187,7 @@ class Order(db.Model, PersistentBase):
         try:
             self.customer_id = data["customer_id"]
             self.total_price = data["total_price"]
+            self.status = data["status"]
             # handle inner list of addresses
             item_list = data.get("items")
             for json_item in item_list:
