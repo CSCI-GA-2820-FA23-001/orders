@@ -103,6 +103,7 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
         self.assertEqual(data["customer_id"], order.customer_id)
+        self.assertEqual(data["status"], order.status)
         self.assertEqual(data["creation_time"], data["last_updated_time"])
 
     def test_get_orders_by_customer_id(self):
@@ -141,11 +142,12 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(
             new_order["total_price"], order.total_price, "Total price does not match"
         )
+        self.assertEqual(new_order["status"], order.status, "Status does not match")
         self.assertEqual(new_order["items"], order.items, "Items don't not match")
         self.assertEqual(
             new_order["creation_time"],
             new_order["last_updated_time"],
-            "Creation-time does not last-updated_time",
+            "Creation-time does not match last-updated_time",
         )
 
         # Check that the location header was correct by getting it

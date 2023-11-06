@@ -56,6 +56,7 @@ class TestOrder(unittest.TestCase):
             customer_id=fake_order.customer_id,
             creation_time=fake_order.creation_time,
             last_updated_time=fake_order.last_updated_time,
+            status=fake_order.status,
             total_price=fake_order.total_price,
         )
         print(repr(order))
@@ -64,6 +65,7 @@ class TestOrder(unittest.TestCase):
         self.assertEqual(order.customer_id, fake_order.customer_id)
         self.assertEqual(order.creation_time, fake_order.creation_time)
         self.assertEqual(order.last_updated_time, fake_order.last_updated_time)
+        self.assertEqual(order.status, fake_order.status)
         self.assertEqual(order.total_price, fake_order.total_price)
 
     def test_add_an_order(self):
@@ -89,6 +91,7 @@ class TestOrder(unittest.TestCase):
         self.assertEqual(found_order.customer_id, order.customer_id)
         self.assertEqual(found_order.creation_time, order.creation_time)
         self.assertEqual(found_order.last_updated_time, order.last_updated_time)
+        self.assertEqual(found_order.status, order.status)
         self.assertEqual(found_order.total_price, order.total_price)
         self.assertEqual(found_order.items, [])
 
@@ -158,6 +161,7 @@ class TestOrder(unittest.TestCase):
         self.assertEqual(
             serial_order["last_updated_time"], order.last_updated_time.isoformat()
         )
+        self.assertEqual(serial_order["status"], order.status)
         self.assertEqual(serial_order["total_price"], order.total_price)
         self.assertEqual(len(serial_order["items"]), 1)
         items = serial_order["items"]
@@ -178,6 +182,7 @@ class TestOrder(unittest.TestCase):
         new_order = Order()
         new_order.deserialize(serial_order)
         self.assertEqual(new_order.customer_id, order.customer_id)
+        self.assertEqual(new_order.status, order.status)
         self.assertEqual(new_order.total_price, order.total_price)
 
     def test_deserialize_order_with_key_error(self):
@@ -268,7 +273,7 @@ class TestOrder(unittest.TestCase):
         # Assert that it was assigned an id and shows up in the database
         self.assertIsNotNone(order.id)
         self.assertEqual(order.creation_time, order.last_updated_time)
-        # self.assertEqual(order.total_price, item.price * item.quantity)
+        self.assertEqual(order.total_price, item.price * item.quantity)
         orders = Order.all()
         self.assertEqual(len(orders), 1)
 
