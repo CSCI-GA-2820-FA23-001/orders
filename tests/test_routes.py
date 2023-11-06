@@ -105,6 +105,14 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(data["customer_id"], order.customer_id)
         self.assertEqual(data["creation_time"], data["last_updated_time"])
 
+    def test_get_orders_by_customer_id(self):
+        """It should Get an Order by Customer Id"""
+        orders = self._create_orders(3)
+        resp = self.client.get(BASE_URL, query_string=f"customer_id={orders[1].customer_id}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(data[0]["customer_id"], orders[1].customer_id)
+
     def test_read_order_not_found(self):
         """It should not Read an Order that is not found"""
         resp = self.client.get(f"{BASE_URL}/0")
