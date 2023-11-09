@@ -12,6 +12,7 @@ from service import app
 from service.models import db, init_db, Order
 from service.common import status  # HTTP Status Codes
 from tests.factories import OrderFactory, ItemFactory
+from datetime import datetime
 
 
 DATABASE_URI = os.getenv(
@@ -113,6 +114,17 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
         self.assertEqual(data[0]["customer_id"], orders[1].customer_id)
+
+    def test_get_orders_by_date(self):
+        """It should Get an Order by Date"""
+        orders = self._create_orders(3)
+        resp = self.client.get(BASE_URL, query_string=f"date={orders[1].creation_time.date()}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        date_string = data[0]["creation_time"]
+        date_format = '%Y-%m-%dT%H:%M:%S.%f'
+        date_obj = datetime.strptime(date_string, date_format)
+        self.assertEqual(date_obj.date(), orders[1].creation_time.date())
 
     def test_read_order_not_found(self):
         """It should not Read an Order that is not found"""
