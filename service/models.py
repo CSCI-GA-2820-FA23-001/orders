@@ -7,6 +7,7 @@ import logging
 from abc import abstractmethod
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime, timedelta
 
 
 logger = logging.getLogger("flask.app")
@@ -257,6 +258,18 @@ class Order(db.Model, PersistentBase):
         """
         logger.info("Processing customer_id query for %d ...", customer_id)
         return cls.query.filter(cls.customer_id == customer_id)
+
+    @classmethod
+    def find_by_date(cls, date):
+        """Returns all Orders placed on a given date
+
+        Args:
+            date (string): the date of the Order you want to match
+        """
+        logger.info("Processing date query for %s ...", date)
+        date_format = "%Y-%m-%d"
+        date_obj = datetime.strptime(date, date_format)
+        return cls.query.filter(cls.creation_time>= date_obj, cls.creation_time < date_obj + timedelta(days=1)).all()
 
     def delete(self):
         """
