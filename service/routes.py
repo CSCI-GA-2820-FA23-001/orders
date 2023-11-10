@@ -191,13 +191,16 @@ def list_orders():
     # Process the query string if any
     customer_id = request.args.get("customer_id")
     date = request.args.get("date")
+    order_status = request.args.get("status")
     if customer_id:
         orders = Order.find_by_customer_id(customer_id)
     elif date:
         orders = Order.find_by_date(date)
+    elif order_status:
+        orders = Order.find_by_status(order_status)
     else:
         orders = Order.all()
-    
+
     # Return as an array of dictionaries
     results = [order.serialize() for order in orders]
     return make_response(jsonify(results), status.HTTP_200_OK)

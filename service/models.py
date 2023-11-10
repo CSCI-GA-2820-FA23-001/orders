@@ -5,9 +5,8 @@ All of the models are stored in this module
 """
 import logging
 from abc import abstractmethod
-from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
+from flask_sqlalchemy import SQLAlchemy
 
 
 logger = logging.getLogger("flask.app")
@@ -257,7 +256,7 @@ class Order(db.Model, PersistentBase):
             customer_id (integer): the customer_id of the Order you want to match
         """
         logger.info("Processing customer_id query for %d ...", customer_id)
-        return cls.query.filter(cls.customer_id == customer_id)
+        return cls.query.filter(cls.customer_id == customer_id).all()
 
     @classmethod
     def find_by_date(cls, date):
@@ -269,7 +268,20 @@ class Order(db.Model, PersistentBase):
         logger.info("Processing date query for %s ...", date)
         date_format = "%Y-%m-%d"
         date_obj = datetime.strptime(date, date_format)
-        return cls.query.filter(cls.creation_time>= date_obj, cls.creation_time < date_obj + timedelta(days=1)).all()
+        return cls.query.filter(
+            cls.creation_time >= date_obj,
+            cls.creation_time < date_obj + timedelta(days=1),
+        ).all()
+
+    @classmethod
+    def find_by_status(cls, status):
+        """Returns all Orders placed on a given status
+
+        Args:
+            status (string): the status of the Order you want to match
+        """
+        logger.info("processing status query for %s ...", status)
+        return cls.query.filter(cls.status == status).all()
 
     def delete(self):
         """
