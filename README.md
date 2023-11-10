@@ -1,5 +1,7 @@
 # NYU DevOps Orders
 
+[![Build Status](https://github.com/CSGI-GA-2820-FA23-001/orders/actions/workflows/workflow.yml/badge.svg)](https://github.com/CSGI-GA-2820-FA23-001/orders/actions)
+
 <img src="shopping_cart.png" alt= “map” width="75%" height="75%">
 
 The orders group for the NYU DevOps and Agile Methodologies class!
