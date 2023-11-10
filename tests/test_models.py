@@ -8,6 +8,7 @@ import unittest
 from service import app
 from service.models import Order, Item, DataValidationError, db
 from tests.factories import OrderFactory, ItemFactory
+from datetime import datetime
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
@@ -151,6 +152,7 @@ class TestOrder(unittest.TestCase):
 
     def test_find_by_status(self):
         """It should Find all Orders by status"""
+        """It should Find all Orders by status"""
         order = OrderFactory()
         order.create()
 
@@ -158,6 +160,19 @@ class TestOrder(unittest.TestCase):
         same_account = Order.find_by_status(order.status)[0]
         self.assertEqual(same_account.id, order.id)
         self.assertEqual(same_account.status, order.status)
+
+    def test_find_by_date(self):
+        """It should find all orders by date"""
+        order = OrderFactory()
+        order.create()
+
+        # Fetch it back by status
+        # date_string = order.creation_time
+        date_format = "%Y-%m-%dT%H:%M:%S.%f"
+        # date_obj = datetime.strptime(date_string, date_format)
+        same_account = Order.find_by_date(order.creation_time.date().strftime("%Y-%m-%d"))[0]
+        self.assertEqual(same_account.id, order.id)
+        self.assertEqual(same_account.creation_time.date(), order.creation_time.date())
 
     def test_serialize_an_order(self):
         """It should Serialize an Order"""
