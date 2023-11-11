@@ -8,7 +8,7 @@ import unittest
 from service import app
 from service.models import Order, Item, DataValidationError, db
 from tests.factories import OrderFactory, ItemFactory
-from datetime import datetime
+
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
@@ -152,7 +152,6 @@ class TestOrder(unittest.TestCase):
 
     def test_find_by_status(self):
         """It should Find all Orders by status"""
-        """It should Find all Orders by status"""
         order = OrderFactory()
         order.create()
 
@@ -168,7 +167,7 @@ class TestOrder(unittest.TestCase):
 
         # Fetch it back by status
         # date_string = order.creation_time
-        date_format = "%Y-%m-%dT%H:%M:%S.%f"
+        # date_format = "%Y-%m-%dT%H:%M:%S.%f"
         # date_obj = datetime.strptime(date_string, date_format)
         same_account = Order.find_by_date(order.creation_time.date().strftime("%Y-%m-%d"))[0]
         self.assertEqual(same_account.id, order.id)
@@ -298,7 +297,7 @@ class TestOrder(unittest.TestCase):
         # Assert that it was assigned an id and shows up in the database
         self.assertIsNotNone(order.id)
         self.assertEqual(order.creation_time, order.last_updated_time)
-        self.assertEqual(order.total_price, item.price * item.quantity)
+        self.assertEqual(order.total_price, round(item.price * item.quantity, 2))
         orders = Order.all()
         self.assertEqual(len(orders), 1)
 
