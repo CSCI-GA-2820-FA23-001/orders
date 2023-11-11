@@ -24,7 +24,7 @@ class TestOrder(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """This runs once before the entire test suite""" #comment
-        app.config["TESTING"] = True 
+        app.config["TESTING"] = True #comment
         app.config["DEBUG"] = False
         app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
         app.logger.setLevel(logging.CRITICAL)
