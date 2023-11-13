@@ -298,6 +298,30 @@ def delete_orders(order_id):
 
 
 ######################################################################
+#  CANCEL ORDER
+######################################################################
+
+
+@app.route("/orders/<int:order_id>/cancel", methods=["PUT"])
+def cancel_orders(order_id):
+    """
+    Cancel an Order
+    This endpoint will cancel an Order with the ID given.
+    """
+    app.logger.info("Request to cancel an order with order ID %d", order_id)
+
+    # See if the order exists and delete if it exists
+    order = Order.find(order_id)
+    if not order:
+        abort(status.HTTP_404_NOT_FOUND, f"Order with id '{order_id}' was not found.")
+
+    order.status = "canceled"
+    order.update()
+
+    return make_response(jsonify(order.serialize()), status.HTTP_200_OK)
+
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
