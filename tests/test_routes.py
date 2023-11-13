@@ -227,6 +227,23 @@ class TestOrderItemServer(TestCase):
             response.status_code, status.HTTP_404_NOT_FOUND
         )  # 404 error after the fact
 
+    def test_cancel_order(self):
+        """It should cancel the order"""
+
+        # create an Order to update
+        test_order = OrderFactory()
+        resp = self.client.post(BASE_URL, json=test_order.serialize())
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # update the pet
+        new_order = resp.get_json()
+        new_order_id = new_order["id"]
+        resp = self.client.put(f"{BASE_URL}/{new_order_id}/cancel")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        updated_order = resp.get_json()
+        print(updated_order)
+        self.assertEqual(updated_order["status"], "canceled")
+
     def test_bad_request(self):
         """It should not Create when sending the wrong data"""
         resp = self.client.post(BASE_URL, json={})
