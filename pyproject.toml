@@ -1,0 +1,2 @@
+[tool.coverage.xml]
+output="./coverage.xml"

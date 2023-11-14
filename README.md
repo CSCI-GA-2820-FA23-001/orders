@@ -2,6 +2,9 @@
 
 <img src="shopping_cart.png" alt= “map” width="75%" height="75%">
 
+![Build Status](https://github.com/CSCI-GA-2820-FA23-001/orders/actions/workflows/workflow.yml/badge.svg)
+[![codecov](https://codecov.io/gh/CSCI-GA-2820-FA23-001/orders/graph/badge.svg?token=L40JTEG7R5)](https://codecov.io/gh/CSCI-GA-2820-FA23-001/orders)
+
 The orders group for the NYU DevOps and Agile Methodologies class!
 This code aims to allow any customer to set up their order.
 This will include all the necessary functions for a customer to be able to manage their order, including:
