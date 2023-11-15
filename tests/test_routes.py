@@ -10,7 +10,7 @@ import logging
 from unittest import TestCase
 from datetime import datetime
 from service import app
-from service.models import db, init_db, Order
+from service.models import db, init_db, Order, Item
 from service.common import status  # HTTP Status Codes
 from tests.factories import OrderFactory, ItemFactory
 
@@ -47,6 +47,7 @@ class TestOrderItemServer(TestCase):
         """This runs before each test"""
         self.client = app.test_client()
         db.session.query(Order).delete()  # clean up the last tests
+        db.session.query(Item).delete()  # clean up the last tests
         db.session.commit()
 
     def tearDown(self):
@@ -446,3 +447,41 @@ class TestOrderItemServer(TestCase):
             content_type="application/json",
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_zopy_order(self):
+        """It should create a copy of an existing order"""
+
+        # create an Order to update
+        _order = OrderFactory()
+        _order.create()
+        for item in ItemFactory.create_batch(5):
+            item.create()
+            _order.items.append(item)
+            _order.update()
+
+        resp = self.client.post(BASE_URL, json=_order.serialize())
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # Copy the order
+        order = resp.get_json()
+        order_id = order["id"]
+        resp = self.client.post(f"{BASE_URL}/{order_id}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        new_order = resp.get_json()
+
+        self.assertNotEqual(_order.id, new_order["id"])
+        self.assertEqual(_order.customer_id, new_order["customer_id"])
+        self.assertEqual(_order.status, new_order["status"])
+        self.assertEqual(len(_order.items), len(new_order["items"]))
+
+        def test_item_is_copy(item_x, item_y):
+            self.assertNotEqual(item_x.id, item_y["id"])
+            self.assertEqual(new_order["id"], item_y["order_id"])
+            self.assertEqual(item_x.name, item_y["name"])
+            self.assertEqual(item_x.price, item_y["price"])
+            self.assertEqual(item_x.description, item_y["description"])
+            self.assertEqual(item_x.quantity, item_y["quantity"])
+
+        for i, item1 in enumerate(_order.items):
+            item2 = new_order["items"][i]
+            test_item_is_copy(item1, item2)
