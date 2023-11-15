@@ -140,6 +140,19 @@ class Item(db.Model, PersistentBase):
         logger.info("Updating an Order %d", self.id)
         db.session.commit()
 
+    def copy(self):
+        """
+        Create an copy of an item and save to the database
+        """
+        logger.info("Copying an item %d", self.id)
+
+        other = Item()
+        other.deserialize(self.serialize())
+        other.id = None
+        other.create()
+
+        return other
+
 
 class Order(db.Model, PersistentBase):
     """
@@ -290,3 +303,22 @@ class Order(db.Model, PersistentBase):
         logger.info("Deleting an order with the order ID %d", self.id)
         db.session.delete(self)
         db.session.commit()
+
+    def copy(self):
+        """
+        Creates a copy of an order and save to DB
+        """
+        logger.info("Copying an order with the order ID %d", self.id)
+
+        other = Order()
+        other.customer_id = self.customer_id
+        other.status = self.status
+        # I delegate the handling of all other fields to create()
+        other.create()
+
+        other.items = [item.copy() for item in self.items]
+        for item in other.items:
+            item.order_id = other.id
+        other.update()
+
+        return other

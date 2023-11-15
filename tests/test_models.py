@@ -169,7 +169,9 @@ class TestOrder(unittest.TestCase):
         # date_string = order.creation_time
         # date_format = "%Y-%m-%dT%H:%M:%S.%f"
         # date_obj = datetime.strptime(date_string, date_format)
-        same_account = Order.find_by_date(order.creation_time.date().strftime("%Y-%m-%d"))[0]
+        same_account = Order.find_by_date(
+            order.creation_time.date().strftime("%Y-%m-%d")
+        )[0]
         self.assertEqual(same_account.id, order.id)
         self.assertEqual(same_account.creation_time.date(), order.creation_time.date())
 
@@ -363,3 +365,40 @@ class TestOrder(unittest.TestCase):
         items = Item.all()
         self.assertEqual(len(items), 5)
         self.assertEqual(len(order.items), 5)
+
+    def test_z_copy_an_order(self):
+        """It should make a duplicate of an order and save to the database"""
+
+        orders = Order.all()
+        self.assertEqual(orders, [])
+
+        order = OrderFactory()
+        order.create()
+
+        self.assertEqual(order.items, [])
+        for item in ItemFactory.create_batch(5):
+            item.create()
+            order.items.append(item)
+            order.update()
+        # Assert that there are not 5 items in the database
+        items = Item.all()
+        self.assertEqual(len(items), 5)
+        self.assertEqual(len(order.items), 5)
+
+        new_order = order.copy()
+        self.assertNotEqual(order.id, new_order.id)
+        self.assertEqual(order.customer_id, new_order.customer_id)
+        self.assertEqual(order.status, new_order.status)
+        self.assertEqual(len(order.items), len(new_order.items))
+
+        def test_item_is_copy(item_x, item_y):
+            self.assertNotEqual(item_x.id, item_y.id)
+            self.assertEqual(new_order.id, item_y.order_id)
+            self.assertEqual(item_x.name, item_y.name)
+            self.assertEqual(item_x.price, item_y.price)
+            self.assertEqual(item_x.description, item_y.description)
+            self.assertEqual(item_x.quantity, item_y.quantity)
+
+        for i, item1 in enumerate(order.items):
+            item2 = new_order.items[i]
+            test_item_is_copy(item1, item2)

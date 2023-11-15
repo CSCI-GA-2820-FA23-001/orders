@@ -71,7 +71,7 @@ If you want to contribute to our code, here are the related guidelines: [Link](.
 * Viraj Parikh [GitHub](https://github.com/VirajYParikh)
 * Zhao Yang [GitHub](https://github.com/JooooosephY)
 * Rahul Patel [GitHub](https://github.com/rahul-m-patel)
-* Yujing Zhang [GitHub](https://www.google.com/)
+* Yujing Zhang [GitHub](https://github.com/starz107)
 
 ## Database Schema
 
