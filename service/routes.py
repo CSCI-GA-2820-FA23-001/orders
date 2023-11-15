@@ -15,7 +15,7 @@ GET /item/{item id} - Returns an Item with a given item id number
 POST orders/{id}/items - creates a new Item record in the Order with a given id number
 PUT /orders/{id}/items/{item id} - updates an Item record with a given item id in the Order with a given id number
 DELETE /orders/{id}/items/{item id} - deletes an Item record with a given item id in the Order with a given id number
-POST /orders/{id} - creates a copy of an existing Order in the database
+POST /orders/{id}/repeat - creates a copy of an existing Order in the database
 """
 
 from flask import jsonify, request, url_for, abort, make_response
@@ -326,7 +326,7 @@ def cancel_orders(order_id):
 ######################################################################
 
 
-@app.route("/orders/<int:order_id>", methods=["POST"])
+@app.route("/orders/<int:order_id>/repeat", methods=["POST"])
 def repeat_order(order_id):
     """
     Repeat an Order

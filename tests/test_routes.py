@@ -466,7 +466,7 @@ class TestOrderItemServer(TestCase):
         # Copy the order
         order = resp.get_json()
         order_id = order["id"]
-        resp = self.client.post(f"{BASE_URL}/{order_id}")
+        resp = self.client.post(f"{BASE_URL}/{order_id}/repeat")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         new_order = resp.get_json()
 
@@ -489,5 +489,5 @@ class TestOrderItemServer(TestCase):
 
     def test_copy_order_not_found(self):
         """It should not add an item when order doesn't exist"""
-        resp = self.client.post(f"{BASE_URL}/0")
+        resp = self.client.post(f"{BASE_URL}/0/repeat")
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
