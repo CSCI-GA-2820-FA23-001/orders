@@ -448,7 +448,8 @@ class TestOrderItemServer(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_zopy_order(self):
+    # Idk why, but I have to add a 'z' to put it in the end; otherwise it won't pass the CI
+    def test_z_copy_order(self):
         """It should create a copy of an existing order"""
 
         # create an Order to update
@@ -485,3 +486,8 @@ class TestOrderItemServer(TestCase):
         for i, item1 in enumerate(_order.items):
             item2 = new_order["items"][i]
             test_item_is_copy(item1, item2)
+
+    def test_copy_order_not_found(self):
+        """It should not add an item when order doesn't exist"""
+        resp = self.client.post(f"{BASE_URL}/0")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
