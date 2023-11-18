@@ -299,7 +299,7 @@ class TestOrder(unittest.TestCase):
         # Assert that it was assigned an id and shows up in the database
         self.assertIsNotNone(order.id)
         self.assertEqual(order.creation_time, order.last_updated_time)
-        self.assertEqual(order.total_price, round(item.price * item.quantity, 2))
+        self.assertEqual(order.total_price, item.price * item.quantity)
         orders = Order.all()
         self.assertEqual(len(orders), 1)
 

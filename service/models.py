@@ -6,8 +6,10 @@ All of the models are stored in this module
 import logging
 from abc import abstractmethod
 from datetime import datetime, timedelta
+from decimal import Decimal, getcontext
 from flask_sqlalchemy import SQLAlchemy
 
+getcontext().prec = 2
 
 logger = logging.getLogger("flask.app")
 
@@ -79,7 +81,7 @@ class Item(db.Model, PersistentBase):
         db.Integer, db.ForeignKey("order.id", ondelete="CASCADE"), nullable=False
     )
     name = db.Column(db.String(64))
-    price = db.Column(db.Float(4))
+    price = db.Column(db.Numeric(10, 2))
     description = db.Column(db.String(128))
     quantity = db.Column(db.Integer)
 
@@ -167,7 +169,7 @@ class Order(db.Model, PersistentBase):
     creation_time = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     last_updated_time = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     items = db.relationship("Item", backref="order", passive_deletes=True)
-    total_price = db.Column(db.Float(4))
+    total_price = db.Column(db.Numeric(10, 2))
     status = db.Column(db.String(32))
 
     def __repr__(self):
@@ -221,9 +223,9 @@ class Order(db.Model, PersistentBase):
 
     def get_total_price(self) -> float:
         """It can calculate the total price of the order"""
-        total = float(0.0)
+        total = Decimal(0)
         for item in self.items:
-            total += float(item.price) * float(item.quantity)
+            total += Decimal(item.price) * item.quantity
 
         return total
 
