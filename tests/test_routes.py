@@ -9,11 +9,13 @@ import os
 import logging
 from unittest import TestCase
 from datetime import datetime
+from decimal import Decimal, getcontext
 from service import app
 from service.models import db, init_db, Order, Item
 from service.common import status  # HTTP Status Codes
 from tests.factories import OrderFactory, ItemFactory
 
+getcontext().prec = 2
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
@@ -165,7 +167,9 @@ class TestOrderItemServer(TestCase):
             "Customer Id does not match",
         )
         self.assertEqual(
-            new_order["total_price"], order.total_price, "Total price does not match"
+            Decimal(new_order["total_price"]),
+            order.total_price,
+            "Total price does not match",
         )
         self.assertEqual(new_order["status"], order.status, "Status does not match")
         self.assertEqual(new_order["items"], order.items, "Items don't not match")
@@ -184,7 +188,9 @@ class TestOrderItemServer(TestCase):
             new_order["customer_id"], order.customer_id, "Customer Id does not match"
         )
         self.assertEqual(
-            new_order["total_price"], order.total_price, "Total price does not match"
+            Decimal(new_order["total_price"]),
+            order.total_price,
+            "Total price does not match",
         )
         self.assertEqual(new_order["items"], order.items, "Items don't not match")
         self.assertEqual(
@@ -273,7 +279,7 @@ class TestOrderItemServer(TestCase):
         logging.debug(data)
         self.assertEqual(data["order_id"], order.id)
         self.assertEqual(data["name"], item.name)
-        self.assertEqual(data["price"], item.price)
+        self.assertEqual(Decimal(data["price"]), item.price)
         self.assertEqual(data["description"], item.description)
         self.assertEqual(data["quantity"], item.quantity)
 
@@ -359,7 +365,7 @@ class TestOrderItemServer(TestCase):
         logging.debug(data)
         self.assertEqual(data["order_id"], order.id)
         self.assertEqual(data["name"], item.name)
-        self.assertEqual(data["price"], item.price)
+        self.assertEqual(Decimal(data["price"]), item.price)
         self.assertEqual(data["description"], item.description)
         self.assertEqual(data["quantity"], item.quantity)
 
@@ -466,7 +472,7 @@ class TestOrderItemServer(TestCase):
         # Copy the order
         order = resp.get_json()
         order_id = order["id"]
-        resp = self.client.post(f"{BASE_URL}/{order_id}")
+        resp = self.client.post(f"{BASE_URL}/{order_id}/repeat")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         new_order = resp.get_json()
 
@@ -479,7 +485,7 @@ class TestOrderItemServer(TestCase):
             self.assertNotEqual(item_x.id, item_y["id"])
             self.assertEqual(new_order["id"], item_y["order_id"])
             self.assertEqual(item_x.name, item_y["name"])
-            self.assertEqual(item_x.price, item_y["price"])
+            self.assertEqual(item_x.price, Decimal(item_y["price"]))
             self.assertEqual(item_x.description, item_y["description"])
             self.assertEqual(item_x.quantity, item_y["quantity"])
 
@@ -489,5 +495,5 @@ class TestOrderItemServer(TestCase):
 
     def test_copy_order_not_found(self):
         """It should not add an item when order doesn't exist"""
-        resp = self.client.post(f"{BASE_URL}/0")
+        resp = self.client.post(f"{BASE_URL}/0/repeat")
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
