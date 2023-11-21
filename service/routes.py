@@ -48,6 +48,20 @@ def index():
 #  R E S T   A P I   E N D P O I N T S
 ######################################################################
 
+######################################################################
+# CHECK HEALTH
+######################################################################
+@app.route("/health")
+def health():
+    """Health URL response"""
+    app.logger.info("Request for Health URL")
+    return (
+        jsonify(
+            status="OK",
+        ),
+        status.HTTP_200_OK
+    )
+
 
 ######################################################################
 # ADD AN ITEM TO AN ORDER
