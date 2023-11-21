@@ -61,7 +61,18 @@ login: ## Login to IBM Cloud using yur api key
 	kubectl cluster-info
 
 .PHONY: deploy
-depoy: ## Deploy the service on local Kubernetes
+deploy: ## Deploy the service on local Kubernetes
 	$(info Deploying service locally...)
 	kubectl apply -f deploy/
 
+.PHONY: build
+build: ## Build image of the app
+	$(info Building image...)
+	docker build -t orders:1.0 .
+	docker tag orders:1.0 cluster-registry:32000/orders:1.0
+
+.PHONY: push
+push: ## Push image to local registry
+	$(info Pushing image to local registry...)
+	docker push cluster-registry:32000/orders:1.0
+	curl cluster-registry:32000/v2/_catalog
