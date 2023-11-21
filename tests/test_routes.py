@@ -89,6 +89,11 @@ class TestOrderItemServer(TestCase):
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
+    def test_health(self):
+        """It should call the health page"""
+        resp = self.client.get("/health")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
     def test_get_order_list(self):
         """It should Get a list of Orders"""
         self._create_orders(5)
@@ -496,4 +501,9 @@ class TestOrderItemServer(TestCase):
     def test_copy_order_not_found(self):
         """It should not add an item when order doesn't exist"""
         resp = self.client.post(f"{BASE_URL}/0/repeat")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_cancel_order_not_found(self):
+        """It should not cancel an order when order doesn't exist"""
+        resp = self.client.put(f"{BASE_URL}/0/cancel")
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
