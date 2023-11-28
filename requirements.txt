@@ -33,4 +33,4 @@ compare==0.2b0
 requests==2.31.0
 
 # Utilities
-httpie==3.2.2
+httpie==3.2.1
