@@ -4,9 +4,12 @@ Feature: The orders service
     So that I can keep track of all the orders
 
 Background:
-    Given the following order schemas
+    Given the following orders
         | Order_ID | Customer_ID | Creation_Time | Last_Updated_Time | Item_List | Total_Price |
         | test     | test        | test          | test              | test      | test        |
+    Given the following items
+        | Item_ID | Order_ID | Item_Name | Item_Price | Description | Quantity |
+        | test    | test     | test      | test       | test        | test     |
 
 Scenario: The server is running
     When I visit the "Home Page"
