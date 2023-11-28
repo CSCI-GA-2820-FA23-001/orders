@@ -164,6 +164,32 @@ $(function () {
         });
     });
 
+    // ****************************************
+    // Delete an Order
+    // ****************************************
+
+    $("#delete-order-btn").click(function () {
+
+        let order_id = $("#order_order_id").val();
+
+        $("#flash_message").empty();
+        
+        let ajax = $.ajax({
+            type: "DELETE",
+            url: "/orders/" + order_id,
+            contentType: "application/json"
+        });
+
+        ajax.done(function(res){
+            clear_order_form_data(res)
+            flash_message("Success")
+        });
+
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
+    });
+
 //     // ****************************************
 //     // Delete a Pet
 //     // ****************************************

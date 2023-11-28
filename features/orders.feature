@@ -18,7 +18,7 @@ Scenario: The server is running
     Then I should see "Orders RESTful Service" in the title
     And I should not see "404 Not Found"
 
-Scenario: Create a Pet
+Scenario: Create an Order
     When I visit the "Home Page"
     And I set the "Order" "Customer_ID" to "1"
     And I select "Pending" in the "Order" "Status" dropdown
@@ -35,6 +35,16 @@ Scenario: Cancel an Order
     And I press the "Cancel Order" button
     Then I should see the message "Success"
     Then I should see "Canceled" in the "Order" "Status" dropdown
+
+
+Scenario: Delete an Order
+    When I visit the "Home Page"
+    And I set the "Order" "Customer_ID" to "1"
+    And I select "Pending" in the "Order" "Status" dropdown
+
+    And I press the "Create Order" button
+    And I press the "Delete Order" button
+    Then I should see the message "Success"
 
     # When I copy the "Id" field
     # And I press the "Clear" button
