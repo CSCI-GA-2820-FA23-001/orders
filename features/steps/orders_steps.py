@@ -31,28 +31,26 @@ HTTP_201_CREATED = 201
 HTTP_204_NO_CONTENT = 204
 
 
-# Copied code from recommendations for reference material
-@given("the following recommendations")
+@given("the following orders")
 def step_impl(context):
     """Delete all Recommendations and load new ones"""
 
-    # List all of the recommendations and delete them one by one
-    rest_endpoint = f"{context.base_url}/recommendations"
+    # List all of the orders and delete them one by one
+    rest_endpoint = f"{context.base_url}/orders"
     context.resp = requests.get(rest_endpoint)
     assert context.resp.status_code == HTTP_200_OK
-    for rec in context.resp.json()["items"]:
+    for rec in context.resp.json():
         context.resp = requests.delete(f"{rest_endpoint}/{rec['id']}")
         assert context.resp.status_code == HTTP_204_NO_CONTENT
 
     # load the database with new recommendations
     for row in context.table:
         payload = {
-            "source_item_id": int(row["source_item_id"]),
-            "target_item_id": int(row["target_item_id"]),
-            "recommendation_type": row["type"],
-            "recommendation_weight": float(row["weight"]),
-            "status": row["status"],
-            "number_of_likes": int(row["number_of_likes"]),
+            "customer_id": int(row["Customer_ID"]),
+            "status": row["Status"],
+            "items": [],
+            "total_price": 0
         }
         context.resp = requests.post(rest_endpoint, json=payload)
+        print(context.resp.status_code)
         assert context.resp.status_code == HTTP_201_CREATED
