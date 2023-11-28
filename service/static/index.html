@@ -27,9 +27,9 @@
         <div class="well">
           <div class="form-horizontal">
             <div class="form-group">
-              <label class="control-label col-sm-2" for="order_id">Order ID:</label>
+              <label class="control-label col-sm-2" for="order_order_id">Order ID:</label>
               <div class="col-sm-6">
-                <input type="text" class="form-control" id="order_id" placeholder="Enter ID of order">
+                <input type="text" class="form-control" id="order_order_id" placeholder="Enter ID of order">
               </div>
               <div class="col-sm-4">
                 <button type="submit" class="btn btn-primary" id="retrieve-order-btn">Retrieve Order</button>
@@ -60,7 +60,7 @@
             <div class="form-group">
               <label class="control-label col-sm-2" for="order_last_updated_time">Last Updated Time:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="last_updated_time" placeholder="Last Updated time">
+                <input type="text" class="form-control" id="order_last_updated_time" placeholder="Last Updated time">
               </div>
             </div>
 
@@ -121,17 +121,17 @@
 
             <!-- ITEM ID -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="item_id">Item Id:</label>
+              <label class="control-label col-sm-2" for="item_item_id">Item Id:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="item_id" placeholder="Item id">
+                <input type="text" class="form-control" id="item_item_id" placeholder="Item id">
               </div>
             </div>
 
             <!-- ORDER ID -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="order_id">Order id:</label>
+              <label class="control-label col-sm-2" for="item_order_id">Order id:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="order_id" placeholder="Order id">
+                <input type="text" class="form-control" id="item_order_id" placeholder="Order id">
               </div>
             </div>
 
@@ -202,8 +202,8 @@
         <table class="table table-striped">
           <thead>
           <tr>
-            <th class="col-md-1">ORDER ID</th>
             <th class="col-md-4">ITEM ID</th>
+            <th class="col-md-1">ORDER ID</th>
             <th class="col-md-3">NAME</th>
             <th class="col-md-3">DESCRIPTION</th>
             <th class="col-md-3">QUANTITY</th>

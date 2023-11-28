@@ -1,76 +1,70 @@
-// $(function () {
+$(function () {
 
-//     // ****************************************
-//     //  U T I L I T Y   F U N C T I O N S
-//     // ****************************************
+    // ****************************************
+    //  U T I L I T Y   F U N C T I O N S
+    // ****************************************
 
-//     // Updates the form with data from the response
-//     function update_form_data(res) {
-//         $("#pet_id").val(res.id);
-//         $("#pet_name").val(res.name);
-//         $("#pet_category").val(res.category);
-//         if (res.available == true) {
-//             $("#pet_available").val("true");
-//         } else {
-//             $("#pet_available").val("false");
-//         }
-//         $("#pet_gender").val(res.gender);
-//         $("#pet_birthday").val(res.birthday);
-//     }
+    // Updates the form with data from the response
+    function update_order_form_data(res) {
+        $("#order_order_id").val(res.id);
+        $("#order_customer_id").val(res.customer_id);
+        $("#order_creation_time").val(res.creation_time);
+        $("#order_last_updated_time").val(res.last_updated_time);
+        $("#order_status").val(res.status);
+        $("#order_total_price").val(res.total_price);
+    }
 
-//     /// Clears all form fields
-//     function clear_form_data() {
-//         $("#pet_name").val("");
-//         $("#pet_category").val("");
-//         $("#pet_available").val("");
-//         $("#pet_gender").val("");
-//         $("#pet_birthday").val("");
-//     }
+    /// Clears all form fields
+    function clear_order_form_data() {
+        $("#order_id").val("");
+        $("#order_customer_id").val("");
+        $("#order_creation_time").val("");
+        $("#order_last_updated_time").val("");
+        $("#order_status").val("");
+        $("#order_total_price").val("");
+    }
 
-//     // Updates the flash message area
-//     function flash_message(message) {
-//         $("#flash_message").empty();
-//         $("#flash_message").append(message);
-//     }
+    // Updates the flash message area
+    function flash_message(message) {
+        $("#flash_message").empty();
+        $("#flash_message").append(message);
+    }
 
-//     // ****************************************
-//     // Create a Pet
-//     // ****************************************
+    // ****************************************
+    // Create a Order
+    // ****************************************
 
-//     $("#create-btn").click(function () {
+    $("#create-order-btn").click(function () {
 
-//         let name = $("#pet_name").val();
-//         let category = $("#pet_category").val();
-//         let available = $("#pet_available").val() == "true";
-//         let gender = $("#pet_gender").val();
-//         let birthday = $("#pet_birthday").val();
-
-//         let data = {
-//             "name": name,
-//             "category": category,
-//             "available": available,
-//             "gender": gender,
-//             "birthday": birthday
-//         };
-
-//         $("#flash_message").empty();
+        let customer_id = $("#order_customer_id").val();
+        let status = $("#order_status").val();
         
-//         let ajax = $.ajax({
-//             type: "POST",
-//             url: "/pets",
-//             contentType: "application/json",
-//             data: JSON.stringify(data),
-//         });
 
-//         ajax.done(function(res){
-//             update_form_data(res)
-//             flash_message("Success")
-//         });
+        let data = {
+            "customer_id": customer_id,
+            "status": status,
+            "items": [],
+            "total_price": 0
+        };
 
-//         ajax.fail(function(res){
-//             flash_message(res.responseJSON.message)
-//         });
-//     });
+        $("#flash_message").empty();
+        
+        let ajax = $.ajax({
+            type: "POST",
+            url: "/orders",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+        });
+
+        ajax.done(function(res){
+            update_order_form_data(res)
+            flash_message("Success")
+        });
+
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
+    });
 
 
 //     // ****************************************
@@ -171,15 +165,15 @@
 //         });
 //     });
 
-//     // ****************************************
-//     // Clear the form
-//     // ****************************************
+    // ****************************************
+    // Clear the form
+    // ****************************************
 
-//     $("#clear-btn").click(function () {
-//         $("#pet_id").val("");
-//         $("#flash_message").empty();
-//         clear_form_data()
-//     });
+    $("#clear-order-btn").click(function () {
+        $("#order_id").val("");
+        $("#flash_message").empty();
+        clear_order_form_data()
+    });
 
 //     // ****************************************
 //     // Search for a Pet
@@ -257,4 +251,4 @@
 
 //     });
 
-// })
+})
