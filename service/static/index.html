@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Orders RESTful Service</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="static/images/newapp-icon.png">
+    <link rel="stylesheet" href="static/css/cerulean_bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+          <h1>Orders REST API Service</h1>
+      </div>
+
+      <!-- Flash Message -->
+      <div class="table-responsive">
+        <table class="table">
+          <tr><td>Status:</td><td><span id="flash_message"></span></td></tr>
+        </table>
+      </div>
+
+      <!-- FORM ORDERS -->
+      <div class="col-md-12" id="form_data">
+        <h3>Create, Retrieve, Update, and Delete an Order:</h3>
+        <div class="well">
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="order_id">Order ID:</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" id="order_id" placeholder="Enter ID of order">
+              </div>
+              <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary" id="retrieve-order-btn">Retrieve Order</button>
+                <button type="submit" class="btn btn-danger" id="delete-order-btn">Delete Order</button>
+              </div>
+            </div>
+          </div> <!-- form horizontal -->
+
+          <div class="form-horizontal">
+
+            <!-- ORDER CUSTOMER ID -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="order_customer_id">Customer Id:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="order_customer_id" placeholder="Customer id">
+              </div>
+            </div>
+
+            <!-- ORDER CREATION TIME -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="order_creation_time">Creation time:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="order_creation_time" placeholder="Creation time">
+              </div>
+            </div>
+
+            <!-- ORDER LAST UPDATED TIME -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="order_last_updated_time">Last Updated Time:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="last_updated_time" placeholder="Last Updated time">
+              </div>
+            </div>
+
+            <!-- ORDER STATUS -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="order_status">Status:</label>
+              <div class="col-sm-10">
+                <select class="form-control" id="order_status">
+                  <option value="UNKNOWN" selected>Unknown</option>
+                  <option value="PENDING">Pending</option>
+                  <option value="DELIVERED">Delivered</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- ORDER TOTAL PRICE -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="order_total_price">Total Price:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="order_total_price">
+              </div>
+            </div>
+            
+            
+
+            <!-- SUBMIT BUTTONS -->
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary" id="list-order-btn">List Orders</button>
+                <button type="submit" class="btn btn-primary" id="clear-order-btn">Clear Orders</button>
+                <button type="submit" class="btn btn-success" id="create-order-btn">Create Order</button>
+                <button type="submit" class="btn btn-warning" id="update-order-btn">Update Order</button>
+              </div>
+            </div>
+          </div> <!-- form horizontal -->
+        </div> <!-- end well -->
+      </div> <!-- end Form -->
+      
+
+      <!-- FORM ITEMS -->
+      <div class="col-md-12" id="form_data_items">
+        <h3>Create, Retrieve, Update, and Delete an Item:</h3>
+        <div class="well">
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="item_id">Item ID:</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" id="item_id" placeholder="Enter ID of item">
+              </div>
+              <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary" id="retrieve-item-btn">Retrieve Item</button>
+                <button type="submit" class="btn btn-danger" id="delete-item-btn">Delete Item</button>
+              </div>
+            </div>
+          </div> <!-- form horizontal -->
+
+          <div class="form-horizontal">
+
+            <!-- ITEM ID -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="item_id">Item Id:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="item_id" placeholder="Item id">
+              </div>
+            </div>
+
+            <!-- ORDER ID -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="order_id">Order id:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="order_id" placeholder="Order id">
+              </div>
+            </div>
+
+            <!-- ITEM NAME -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="item_name">Name:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="item_name" placeholder="Item Name">
+              </div>
+            </div>
+
+            <!-- ITEM DESCRIPTION -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="item_description">Description:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="item_description" placeholder="Item Description">
+              </div>
+            </div>
+
+            <!-- ITEM QUANTITY -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="item_quantity">Quantity:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="item_quantity">
+              </div>
+            </div>
+
+             <!-- ITEM PRICE -->
+             <div class="form-group">
+              <label class="control-label col-sm-2" for="item_price">Price:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="item_price">
+              </div>
+            </div>
+            
+            
+
+            <!-- SUBMIT BUTTONS -->
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary" id="list-item-btn">List Items </button>
+                <button type="submit" class="btn btn-primary" id="clear-item-btn">Clear Items</button>
+                <button type="submit" class="btn btn-success" id="create-item-btn">Create Item</button>
+                <button type="submit" class="btn btn-warning" id="update-item-btn">Update Item</button>
+              </div>
+            </div>
+          </div> <!-- form horizontal -->
+        </div> <!-- end well -->
+      </div> <!-- end Form -->
+
+      <!-- Search Results -->
+      <div class="table-responsive col-md-12" id="search_results">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th class="col-md-1">ID</th>
+            <th class="col-md-4">CUSTOMER ID</th>
+            <th class="col-md-4">CREATION TIME</th>
+            <th class="col-md-3">LAST UPDATED TIME</th>
+            <th class="col-md-3">STATUS</th>
+            <th class="col-md-3">TOTAL PRICE</th>
+          </tr>
+          </thead>
+        </table>
+      </div>
+
+      <div class="table-responsive col-md-12" id="search_results_item">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th class="col-md-1">ORDER ID</th>
+            <th class="col-md-4">ITEM ID</th>
+            <th class="col-md-3">NAME</th>
+            <th class="col-md-3">DESCRIPTION</th>
+            <th class="col-md-3">QUANTITY</th>
+            <th class="col-md-3">PRICE</th>
+          </tr>
+          </thead>
+        </table>
+      </div>
+
+      <footer>
+        <br><br>
+        <p>&copy; NYU DevOps Company 2023</p>
+      </footer>
+
+    </div> <!-- container -->
+
+  <script type="text/javascript" src = "static/js/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src = "static/js/bootstrap.min.js"></script>
+
+  <!-- YOUR REST API -->
+  <script type="text/javascript" src="static/js/rest_api.js"></script>
+
+  </body>
+</html>
