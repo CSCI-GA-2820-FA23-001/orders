@@ -190,32 +190,31 @@ $(function () {
         });
     });
 
-//     // ****************************************
-//     // Delete a Pet
-//     // ****************************************
+    // ****************************************
+    // Repeat an Order
+    // ****************************************
 
-//     $("#delete-btn").click(function () {
+    $("#repeat-order-btn").click(function () {
 
-//         let pet_id = $("#pet_id").val();
+        let order_id = $("#order_order_id").val();
 
-//         $("#flash_message").empty();
+        $("#flash_message").empty();
 
-//         let ajax = $.ajax({
-//             type: "DELETE",
-//             url: `/pets/${pet_id}`,
-//             contentType: "application/json",
-//             data: '',
-//         })
+        let ajax = $.ajax({
+            type: "POST",
+            url: "/orders/" + order_id + "/repeat",
+            contentType: "application/json"
+        });
 
-//         ajax.done(function(res){
-//             clear_form_data()
-//             flash_message("Pet has been Deleted!")
-//         });
+        ajax.done(function(res){
+            update_order_form_data(res)
+            flash_message("Success")
+        });
 
-//         ajax.fail(function(res){
-//             flash_message("Server error!")
-//         });
-//     });
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
+    });
 
     // ****************************************
     // Clear the form
