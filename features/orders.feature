@@ -26,6 +26,15 @@ Scenario: Create an Order
     And I press the "Create Order" button
     Then I should see the message "Success"
 
+Scenario: Repeat an Order
+    When I visit the "Home Page"
+    And I set the "Order" "Customer_ID" to "1"
+    And I select "Pending" in the "Order" "Status" dropdown
+    And I press the "Create Order" button
+
+    And I press the "Repeat Order" button
+    Then I should see the message "Success"
+
 Scenario: Cancel an Order
     When I visit the "Home Page"
     And I set the "Order" "Customer_ID" to "1"
