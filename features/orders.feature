@@ -5,8 +5,10 @@ Feature: The orders service
 
 Background:
     Given the following orders
-        |Customer_ID | Creation_Time | Last_Updated_Time | Item_List | Status | Total_Price |
-        |1        | test          | test              | test      | pending     | 0         |
+        |Customer_ID | Creation_Time | Last_Updated_Time | Item_List | Status      | Total_Price |
+        |12345       | test          | test              | test      | PENDING     | 0           |
+        |12345       | test          | test              | test      | DELIVERED     | 0         |
+        |23456       | test          | test              | test      | DELIVERED   | 0           |
 #     Given the following items
 #         | Item_ID | Order_ID | Item_Name | Item_Price | Description | Quantity |
 #         | test    | test     | test      | test       | test        | test     |
@@ -48,32 +50,31 @@ Scenario: Cancel an Order
     # And I should see "Male" in the "Gender" dropdown
     # And I should see "2022-06-16" in the "Birthday" field
 
-# Scenario: List all pets
-#     When I visit the "Home Page"
-#     And I press the "Search" button
-#     Then I should see the message "Success"
-#     And I should see "fido" in the results
-#     And I should see "kitty" in the results
-#     And I should not see "leo" in the results
+Scenario: List all orders
+    When I visit the "Home Page"
+    And I press the "Clear Order" button
+    And I press the "List Order" button
+    Then I should see the message "Success"
+    And I should see "PENDING" in the "Order" results
+    And I should see "DELIVERED" in the "Order" results
+    And I should not see "CANCELED" in the "Order" results
 
-# Scenario: Search for dogs
-#     When I visit the "Home Page"
-#     And I set the "Category" to "dog"
-#     And I press the "Search" button
-#     Then I should see the message "Success"
-#     And I should see "fido" in the results
-#     And I should not see "kitty" in the results
-#     And I should not see "leo" in the results
+Scenario: Search for Orders with customer_id 12345
+    When I visit the "Home Page"
+    And I press the "Clear Order" button
+    And I set the "Order" "Customer Id" to "12345"
+    And I press the "List Order" button
+    Then I should see the message "Success"
+    And I should see "12345" in the "Order" results
+    And I should not see "23456" in the "Order" results
 
-# Scenario: Search for available
-#     When I visit the "Home Page"
-#     And I select "True" in the "Available" dropdown
-#     And I press the "Search" button
-#     Then I should see the message "Success"
-#     And I should see "fido" in the results
-#     And I should see "kitty" in the results
-#     And I should see "sammy" in the results
-#     And I should not see "leo" in the results
+Scenario: Search for PENDING orders
+    When I visit the "Home Page"
+    And I select "Pending" in the "Order" "Status" dropdown
+    And I press the "List Order" button
+    Then I should see the message "Success"
+    And I should see "PENDING" in the "Order" results
+    And I should not see "DELIVERED" in the "Order" results
 
 # Scenario: Update a Pet
 #     When I visit the "Home Page"
