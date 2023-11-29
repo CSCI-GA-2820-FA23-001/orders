@@ -49,8 +49,9 @@ def step_impl(context):
             "customer_id": int(row["Customer_ID"]),
             "status": row["Status"],
             "items": [],
-            "total_price": 0
+            "total_price": 0,
         }
+
         context.resp = requests.post(rest_endpoint, json=payload)
         print(context.resp.status_code)
         assert context.resp.status_code == HTTP_201_CREATED
