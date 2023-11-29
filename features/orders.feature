@@ -24,6 +24,16 @@ Scenario: Create a Pet
     And I press the "Create Order" button
     Then I should see the message "Success"
 
+Scenario: Cancel an Order
+    When I visit the "Home Page"
+    And I set the "Order" "Customer_ID" to "1"
+    And I select "Pending" in the "Order" "Status" dropdown
+
+    And I press the "Create Order" button
+    And I press the "Cancel Order" button
+    Then I should see the message "Success"
+    Then I should see "Canceled" in the "Order" "Status" dropdown
+
     # When I copy the "Id" field
     # And I press the "Clear" button
     # Then the "Id" field should be empty

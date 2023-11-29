@@ -254,7 +254,7 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         updated_order = resp.get_json()
         print(updated_order)
-        self.assertEqual(updated_order["status"], "canceled")
+        self.assertEqual(updated_order["status"], "Canceled")
 
     def test_bad_request(self):
         """It should not Create when sending the wrong data"""

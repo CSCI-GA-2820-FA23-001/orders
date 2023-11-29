@@ -41,6 +41,7 @@ def index():
 #  R E S T   A P I   E N D P O I N T S
 ######################################################################
 
+
 ######################################################################
 # CHECK HEALTH
 ######################################################################
@@ -52,7 +53,7 @@ def health():
         jsonify(
             status="OK",
         ),
-        status.HTTP_200_OK
+        status.HTTP_200_OK,
     )
 
 
@@ -322,7 +323,7 @@ def cancel_orders(order_id):
     if not order:
         abort(status.HTTP_404_NOT_FOUND, f"Order with id '{order_id}' was not found.")
 
-    order.status = "canceled"
+    order.status = "Canceled"
     order.update()
 
     return make_response(jsonify(order.serialize()), status.HTTP_200_OK)
