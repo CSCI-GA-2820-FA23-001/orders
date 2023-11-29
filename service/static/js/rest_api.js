@@ -10,7 +10,7 @@ $(function () {
         $("#order_customer_id").val(res.customer_id);
         $("#order_creation_time").val(res.creation_time);
         $("#order_last_updated_time").val(res.last_updated_time);
-        $("#order_status").val(res.status);
+        $("#order_status").val(res.status.toUpperCase());
         $("#order_total_price").val(res.total_price);
     }
 
@@ -137,6 +137,32 @@ $(function () {
 //         });
 
 //     });
+
+    // ****************************************
+    // Cancel an Order
+    // ****************************************
+
+    $("#cancel-order-btn").click(function () {
+
+        let order_id = $("#order_order_id").val();
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: "/orders/" + order_id + "/cancel",
+            contentType: "application/json"
+        });
+
+        ajax.done(function(res){
+            update_order_form_data(res)
+            flash_message("Success")
+        });
+
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
+    });
 
 //     // ****************************************
 //     // Delete a Pet

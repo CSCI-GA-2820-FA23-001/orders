@@ -76,11 +76,12 @@ def step_impl(context, text, prefix, element_name):
         element.select_by_visible_text(text)
 
 
-@then('I should see "{text}" in the "{element_name}" dropdown')
-def step_impl(context, text, element_name):
-    element_id = ID_PREFIX + element_name.lower().replace(" ", "_")
-    element = Select(context.driver.find_element(By.ID, element_id)
-    expect(element.first_selected_option.text).to_equal(text)
+@then('I should see "{text}" in the "{prefix}" "{element_name}" dropdown')
+def step_impl(context, text, prefix, element_name):
+    if prefix == "Order":
+        element_id = ORDER_ID_PREFIX + element_name.lower().replace(" ", "_")
+        element = Select(context.driver.find_element(By.ID, element_id))
+        expect(element.first_selected_option.text).to_equal(text)
 
 
 @then('the "{element_name}" field should be empty')
