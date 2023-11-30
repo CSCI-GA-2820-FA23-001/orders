@@ -67,46 +67,42 @@ $(function () {
     });
 
 
-//     // ****************************************
-//     // Update a Pet
-//     // ****************************************
+    // ****************************************
+    // Update an Order
+    // ****************************************
 
-//     $("#update-btn").click(function () {
+    $("#update-order-btn").click(function () {
 
-//         let pet_id = $("#pet_id").val();
-//         let name = $("#pet_name").val();
-//         let category = $("#pet_category").val();
-//         let available = $("#pet_available").val() == "true";
-//         let gender = $("#pet_gender").val();
-//         let birthday = $("#pet_birthday").val();
+        let order_id = $("#order_order_id").val();
+        let customer_id = $("#order_customer_id").val();
+        let status = $("#order_status").val();
+        let total_price = $("#order_total_price").val();
 
-//         let data = {
-//             "name": name,
-//             "category": category,
-//             "available": available,
-//             "gender": gender,
-//             "birthday": birthday
-//         };
+        let data = {
+            "customer_id": customer_id,
+            "status": status,
+            "total_price": total_price
+        };
 
-//         $("#flash_message").empty();
+        $("#flash_message").empty();
 
-//         let ajax = $.ajax({
-//                 type: "PUT",
-//                 url: `/pets/${pet_id}`,
-//                 contentType: "application/json",
-//                 data: JSON.stringify(data)
-//             })
+        let ajax = $.ajax({
+                type: "PUT",
+                url: `/orders/${order_id}`,
+                contentType: "application/json",
+                data: JSON.stringify(data)
+            })
 
-//         ajax.done(function(res){
-//             update_form_data(res)
-//             flash_message("Success")
-//         });
+        ajax.done(function(res){
+            update_order_form_data(res)
+            flash_message("Success")
+        });
 
-//         ajax.fail(function(res){
-//             flash_message(res.responseJSON.message)
-//         });
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
 
-//     });
+    });
 
 //     // ****************************************
 //     // Retrieve a Pet
