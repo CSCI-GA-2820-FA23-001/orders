@@ -205,10 +205,11 @@ class Order(db.Model, PersistentBase):
             self.status = data["status"]
             # handle inner list of addresses
             item_list = data.get("items")
-            for json_item in item_list:
-                item = Item()
-                item.deserialize(json_item)
-                self.items.append(item)
+            if item_list:
+                for json_item in item_list:
+                    item = Item()
+                    item.deserialize(json_item)
+                    self.items.append(item)
 
         except KeyError as error:
             raise DataValidationError(

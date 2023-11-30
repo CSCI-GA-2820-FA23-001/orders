@@ -95,24 +95,25 @@ Scenario: Search for PENDING orders
     And I should see "PENDING" in the "Order" results
     And I should not see "DELIVERED" in the "Order" results
 
-# Scenario: Update a Pet
-#     When I visit the "Home Page"
-#     And I set the "Name" to "fido"
-#     And I press the "Search" button
-#     Then I should see the message "Success"
-#     And I should see "fido" in the "Name" field
-#     And I should see "dog" in the "Category" field
-#     When I change "Name" to "Loki"
-#     And I press the "Update" button
-#     Then I should see the message "Success"
-#     When I copy the "Id" field
-#     And I press the "Clear" button
-#     And I paste the "Id" field
-#     And I press the "Retrieve" button
-#     Then I should see the message "Success"
-#     And I should see "Loki" in the "Name" field
-#     When I press the "Clear" button
-#     And I press the "Search" button
-#     Then I should see the message "Success"
-#     And I should see "Loki" in the results
-#     And I should not see "fido" in the results
+Scenario: Update an Order
+    When I visit the "Home Page"
+    And I set the "Order" "Customer ID" to "23456"
+    And I press the "List Order" button
+    Then I should see the message "Success"
+    And I should see "23456" in the "Order" "Customer ID" field
+    And I should see "Delivered" in the "Order" "Status" dropdown
+    When I change "Order" "Customer ID" to "34567"
+    And I press the "Update Order" button
+    Then I should see the message "Success"
+
+    # When I copy the "Id" field
+    # And I press the "Clear" button
+    # And I paste the "Id" field
+    # And I press the "Retrieve" button
+    # Then I should see the message "Success"
+    # And I should see "Loki" in the "Name" field
+    When I press the "Clear Order" button
+    And I press the "List Order" button
+    Then I should see the message "Success"
+    And I should see "34567" in the "Order" results
+    And I should not see "23456" in the "Order" results
