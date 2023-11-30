@@ -201,7 +201,7 @@ class Order(db.Model, PersistentBase):
         """
         try:
             self.customer_id = data["customer_id"]
-            # self.total_price = data["total_price"]
+            self.total_price = data["total_price"]
             self.status = data["status"]
             # handle inner list of addresses
             item_list = data.get("items")
