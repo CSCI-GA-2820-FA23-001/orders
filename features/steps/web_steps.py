@@ -93,9 +93,13 @@ def step_impl(context, text, prefix, element_name):
     expect(element.first_selected_option.text).to_equal(text)
 
 
-@then('the "{element_name}" field should be empty')
-def step_impl(context, element_name):
-    element_id = ID_PREFIX + element_name.lower().replace(" ", "_")
+@then('the "{prefix}" "{element_name}" field should be empty')
+def step_impl(context, prefix, element_name):
+    element_id = element_name.lower().replace(" ", "_")
+    if prefix == "Order":
+        element_id = ORDER_ID_PREFIX + element_id
+    else:
+        element_id = ITEM_ID_PREFIX + element_id
     element = context.driver.find_element(By.ID, element_id)
     expect(element.get_attribute("value")).to_be("")
 
@@ -103,20 +107,28 @@ def step_impl(context, element_name):
 ##################################################################
 # These two function simulate copy and paste
 ##################################################################
-@when('I copy the "{element_name}" field')
-def step_impl(context, element_name):
-    element_id = ID_PREFIX + element_name.lower().replace(" ", "_")
-    element = WebDriverWait(context.driver, context.WAIT_SECONDS).until(
+@when('I copy the "{prefix}" "{element_name}" field')
+def step_impl(context, prefix, element_name):
+    element_id = element_name.lower().replace(" ", "_")
+    if prefix == "Order":
+        element_id = ORDER_ID_PREFIX + element_id
+    else:
+        element_id = ITEM_ID_PREFIX + element_id
+    element = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.presence_of_element_located((By.ID, element_id))
     )
     context.clipboard = element.get_attribute("value")
     logging.info("Clipboard contains: %s", context.clipboard)
 
 
-@when('I paste the "{element_name}" field')
-def step_impl(context, element_name):
-    element_id = ID_PREFIX + element_name.lower().replace(" ", "_")
-    element = WebDriverWait(context.driver, context.WAIT_SECONDS).until(
+@when('I paste the "{prefix}" "{element_name}" field')
+def step_impl(context, prefix, element_name):
+    element_id = element_name.lower().replace(" ", "_")
+    if prefix == "Order":
+        element_id = ORDER_ID_PREFIX + element_id
+    else:
+        element_id = ITEM_ID_PREFIX + element_id
+    element = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.presence_of_element_located((By.ID, element_id))
     )
     element.clear()
