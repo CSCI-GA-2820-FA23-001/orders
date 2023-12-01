@@ -16,7 +16,7 @@ $(function () {
 
     /// Clears all form fields
     function clear_order_form_data() {
-        $("#order_id").val("");
+        $("#order_order_id").val("");
         $("#order_customer_id").val("");
         $("#order_creation_time").val("");
         $("#order_last_updated_time").val("");
@@ -104,35 +104,35 @@ $(function () {
 
     });
 
-//     // ****************************************
-//     // Retrieve a Pet
-//     // ****************************************
+    // ****************************************
+    // Retrieve an Order
+    // ****************************************
 
-//     $("#retrieve-btn").click(function () {
+    $("#retrieve-order-btn").click(function () {
 
-//         let pet_id = $("#pet_id").val();
+        let order_id = $("#order_order_id").val();
 
-//         $("#flash_message").empty();
+        $("#flash_message").empty();
 
-//         let ajax = $.ajax({
-//             type: "GET",
-//             url: `/pets/${pet_id}`,
-//             contentType: "application/json",
-//             data: ''
-//         })
+        let ajax = $.ajax({
+            type: "GET",
+            url: `/orders/${order_id}`,
+            contentType: "application/json",
+            data: ''
+        })
 
-//         ajax.done(function(res){
-//             //alert(res.toSource())
-//             update_form_data(res)
-//             flash_message("Success")
-//         });
+        ajax.done(function(res){
+            //alert(res.toSource())
+            update_order_form_data(res)
+            flash_message("Success")
+        });
 
-//         ajax.fail(function(res){
-//             clear_form_data()
-//             flash_message(res.responseJSON.message)
-//         });
+        ajax.fail(function(res){
+            clear_order_form_data()
+            flash_message(res.responseJSON.message)
+        });
 
-//     });
+    });
 
     // ****************************************
     // Cancel an Order
