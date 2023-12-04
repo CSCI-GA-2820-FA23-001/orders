@@ -97,7 +97,7 @@ class Item(db.Model, PersistentBase):
             "id": self.id,
             "order_id": self.order_id,
             "name": self.name,
-            "price": float(self.price),
+            "price": self.price,
             "description": self.description,
             "quantity": self.quantity,
         }
