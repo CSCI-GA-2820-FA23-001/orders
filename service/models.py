@@ -112,9 +112,9 @@ class Item(db.Model, PersistentBase):
         try:
             self.order_id = data["order_id"]
             self.name = data["name"]
-            self.price = data["price"]
+            self.price = Decimal(data["price"])
             self.description = data["description"]
-            self.quantity = data["quantity"]
+            self.quantity = int(data["quantity"])
         except KeyError as error:
             raise DataValidationError(
                 "Invalid Item: missing " + error.args[0]

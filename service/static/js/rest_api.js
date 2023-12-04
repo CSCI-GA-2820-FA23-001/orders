@@ -4,7 +4,7 @@ $(function () {
     //  U T I L I T Y   F U N C T I O N S
     // ****************************************
 
-    // Updates the form with data from the response
+    // Updates the Order form with data from the response
     function update_order_form_data(res) {
         $("#order_order_id").val(res.id);
         $("#order_customer_id").val(res.customer_id);
@@ -14,7 +14,7 @@ $(function () {
         $("#order_total_price").val(res.total_price);
     }
 
-    /// Clears all form fields
+    // Clears all Order form fields
     function clear_order_form_data() {
         $("#order_order_id").val("");
         $("#order_customer_id").val("");
@@ -22,6 +22,26 @@ $(function () {
         $("#order_last_updated_time").val("");
         $("#order_status").val("");
         $("#order_total_price").val("");
+    }
+
+    // Updates the Item form with data from the response
+    function update_item_form_data(res) {
+        $("#item_item_id").val(res.id);
+        $("#item_order_id").val(res.order_id);
+        $("#item_name").val(res.name);
+        $("#item_description").val(res.description);
+        $("#item_quantity").val(res.quantity);
+        $("#item_price").val(res.price);
+    }
+
+    // Clears all Item form fields
+    function clear_item_form_data() {
+        $("#item_item_id").val("");
+        $("#item_order_id").val("");
+        $("#item_name").val("");
+        $("#item_description").val("");
+        $("#item_quantity").val("");
+        $("#item_price").val("");
     }
 
     // Updates the flash message area
@@ -296,6 +316,46 @@ $(function () {
             flash_message(res.responseJSON.message)
         });
 
+    });
+
+    // ****************************************
+    // Create an Item
+    // ****************************************
+
+    $("#create-item-btn").click(function () {
+
+        let order_id = $("#item_order_id").val();
+        let name = $("#item_name").val();
+        let description = $("#item_description").val();
+        let quantity = $("#item_quantity").val();
+        let price = $("#item_price").val();
+        
+
+        let data = {
+            "order_id": order_id,
+            "name": name,
+            "description": description,
+            "quantity": quantity,
+            "price": price
+        };
+
+        $("#flash_message").empty();
+        
+        let ajax = $.ajax({
+            type: "POST",
+            url: "/orders/" + order_id + "/items",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+        });
+
+        ajax.done(function(res){
+            update_item_form_data(res)
+            flash_message("Success")
+        });
+
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
     });
 
 })
