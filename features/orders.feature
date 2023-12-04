@@ -22,7 +22,6 @@ Feature: The orders service
         When I visit the "Home Page"
         And I set the "Order" "Customer_ID" to "1"
         And I select "Pending" in the "Order" "Status" dropdown
-
         And I press the "Create Order" button
         Then I should see the message "Success"
 
@@ -104,13 +103,12 @@ Feature: The orders service
         When I change "Order" "Customer ID" to "34567"
         And I press the "Update Order" button
         Then I should see the message "Success"
-
-        # When I copy the "Id" field
-        # And I press the "Clear" button
-        # And I paste the "Id" field
-        # And I press the "Retrieve" button
-        # Then I should see the message "Success"
-        # And I should see "Loki" in the "Name" field
+        When I copy the "Order" "Order Id" field
+        And I press the "Clear Order" button
+        And I paste the "Order" "Order Id" field
+        And I press the "Retrieve Order" button
+        Then I should see the message "Success"
+        And I should see "34567" in the "Order" "Customer ID" field
         When I press the "Clear Order" button
         And I press the "List Order" button
         Then I should see the message "Success"
@@ -136,3 +134,18 @@ Feature: The orders service
         And I should see "1" in the "Order" "Customer Id" field
         And I should see "Pending" in the "Order" "Status" dropdown
         And I should see "0" in the "Order" "Total Price" field
+
+    Scenario: Create an Item
+        When I visit the "Home Page"
+        And I set the "Order" "Customer_ID" to "1"
+        And I select "Pending" in the "Order" "Status" dropdown
+        And I press the "Create Order" button
+        Then I should see the message "Success"
+        When I copy the "Order" "Order Id" field
+        And I paste the "Item" "Order Id" field
+        And I set the "Item" "Name" to "food"
+        And I set the "Item" "Description" to "This is food"
+        And I set the "Item" "Quantity" to "1"
+        And I set the "Item" "Price" to "1"
+        And I press the "Create Item" button
+        Then I should see the message "Success"
