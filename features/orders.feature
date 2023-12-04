@@ -9,9 +9,7 @@ Feature: The orders service
             | 12345       | test          | test              | test      | PENDING   | 0           |
             | 12345       | test          | test              | test      | DELIVERED | 0           |
             | 23456       | test          | test              | test      | DELIVERED | 0           |
-    #     Given the following items
-    #         | Item_ID | Order_ID | Item_Name | Item_Price | Description | Quantity |
-    #         | test    | test     | test      | test       | test        | test     |
+    
 
     Scenario: The server is running
         When I visit the "Home Page"
