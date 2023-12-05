@@ -164,14 +164,14 @@ Feature: The orders service
         Then I should see the message "Success"
         When I copy the "Item" "Order Id" field
         And I press the "Clear Item" button
-        # Then the "Item" "Order Id" field should be empty
-        Then the "Item" "Item ID" field should be empty
+        Then the "Item" "Order Id" field should be empty
+        And the "Item" "Item ID" field should be empty
         And the "Item" "Name" field should be empty
         And the "Item" "Description" field should be empty
         And the "Item" "Quantity" field should be empty
         And the "Item" "Price" field should be empty
-        When I paste the "Order" "Order Id" field
-        And I press the "List Items" button
+        When I paste the "Item" "Order Id" field
+        And I press the "List Item" button
         Then I should see the message "Success"
         And I should see "This is food" in the "Item" results
         And I should see "1" in the "Item" results
