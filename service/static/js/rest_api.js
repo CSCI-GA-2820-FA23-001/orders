@@ -358,4 +358,77 @@ $(function () {
         });
     });
 
+      // ****************************************
+    // List Items
+    // ****************************************
+
+    $("#list-item-btn").click(function () {
+
+        let order_id = $("#item_order_id").val();
+
+        // let queryString = ""
+
+        // if (customer_id) {
+        //     queryString += 'customer_id=' + customer_id
+        // }
+        // if (creation_time) {
+        //     if (queryString.length > 0) {
+        //         queryString += '&date=' + creation_time
+        //     } else {
+        //         queryString += 'date=' + creation_time
+        //     }
+        // }
+        // if (status) {
+        //     if (queryString.length > 0) {
+        //         queryString += '&status=' + status
+        //     } else {
+        //         queryString += 'status=' + status
+        //     }
+        // }
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "GET",
+            url: `/orders/${order_id}/items`,
+            contentType: "application/json",
+            data: ''
+        })
+
+        ajax.done(function(res){
+            //alert(res.toSource())
+            $("#item_search_results").empty();
+            let table = '<table class="table table-striped" cellpadding="10">'
+            table += '<thead><tr>'
+            table += '<th class="col-md-4">ITEM ID</th>'
+            table += '<th class="col-md-3">NAME</th>'
+            table += '<th class="col-md-3">DESCRIPTION</th>'
+            table += '<th class="col-md-3">QUANTITY</th>'
+            table += '<th class="col-md-3">PRICE</th>'
+            table += '</tr></thead><tbody>'
+            let firstItem = "";
+            for(let i = 0; i < res.length; i++) {
+                let item = res[i];
+                table +=  `<tr id="row_${i}"><td>${item.item_id}</td><td>${item.name}</td><td>${item.description}</td><td>${item.quantity}</td><td>${item.price}</td></tr>`;
+                if (i == 0) {
+                    firstItem = item;
+                }
+            }
+            table += '</tbody></table>';
+            $("#item_search_results").append(table);
+
+            // copy the first result to the form
+            if (firstItem != "") {
+                update_item_form_data(firstItem)
+            }
+
+            flash_message("Success")
+        });
+
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
+
+    });
+
 })

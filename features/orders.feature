@@ -147,3 +147,12 @@ Feature: The orders service
         And I set the "Item" "Price" to "1"
         And I press the "Create Item" button
         Then I should see the message "Success"
+
+    # Scenario: List all items
+    #     When I visit the "Home Page"
+    #     And I press the "Clear Order" button
+    #     And I press the "List Items" button
+    #     Then I should see the message "Success"
+    #     And I should see "PENDING" in the "Order" results
+    #     And I should see "DELIVERED" in the "Order" results
+    #     And I should not see "CANCELED" in the "Order" results
