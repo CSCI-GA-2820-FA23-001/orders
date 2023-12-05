@@ -166,7 +166,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "PUT",
-            url: "/orders/" + order_id + "/cancel",
+            url: `/orders/${order_id}/cancel`,
             contentType: "application/json"
         });
 
@@ -192,7 +192,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "DELETE",
-            url: "/orders/" + order_id,
+            url: `/orders/${order_id}`,
             contentType: "application/json"
         });
 
@@ -218,7 +218,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "POST",
-            url: "/orders/" + order_id + "/repeat",
+            url: `/orders/${order_id}/repeat`,
             contentType: "application/json"
         });
 
@@ -237,9 +237,13 @@ $(function () {
     // ****************************************
 
     $("#clear-order-btn").click(function () {
-        $("#order_id").val("");
         $("#flash_message").empty();
         clear_order_form_data()
+    });
+
+    $("#clear-item-btn").click(function () {
+        $("#flash_message").empty();
+        clear_item_form_data()
     });
 
     // ****************************************
@@ -343,7 +347,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "POST",
-            url: "/orders/" + order_id + "/items",
+            url: `/orders/${order_id}/items`,
             contentType: "application/json",
             data: JSON.stringify(data),
         });
@@ -444,7 +448,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "DELETE",
-            url: "/orders/" + order_id + "/items/" + item_id,
+            url: `/orders/${order_id}/items/${item_id}`,
             contentType: "application/json"
         });
 
@@ -456,6 +460,47 @@ $(function () {
         ajax.fail(function(res){
             flash_message(res.responseJSON.message)
         });
+    });
+
+    // ****************************************
+    // Update an Item
+    // ****************************************
+
+    $("#update-item-btn").click(function () {
+        
+        let item_id = $("#item_item_id").val();
+        let order_id = $("#item_order_id").val();
+        let name = $("#item_name").val();
+        let description = $("#item_description").val();
+        let quantity = $("#item_quantity").val();
+        let price = $("#item_price").val();
+
+        let data = {
+            "order_id": order_id,
+            "name": name,
+            "description": description,
+            "quantity": quantity,
+            "price": price
+        };
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+                type: "PUT",
+                url: `/orders/${order_id}/items/${item_id}`,
+                contentType: "application/json",
+                data: JSON.stringify(data)
+            })
+
+        ajax.done(function(res){
+            update_item_form_data(res)
+            flash_message("Success")
+        });
+
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
+
     });
 
 })
