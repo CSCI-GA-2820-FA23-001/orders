@@ -172,3 +172,31 @@ Feature: The orders service
         When I press the "Retrieve Order" button
         Then I should see the message "Success"
         And I should see "0.00" in the "Order" "Total price" field
+
+    Scenario: Update an Item
+        When I visit the "Home Page"
+        And I set the "Order" "Customer_ID" to "1"
+        And I select "Pending" in the "Order" "Status" dropdown
+        And I press the "Create Order" button
+        Then I should see the message "Success"
+        When I copy the "Order" "Order Id" field
+        And I paste the "Item" "Order Id" field
+        And I set the "Item" "Name" to "food"
+        And I set the "Item" "Description" to "This is food"
+        And I set the "Item" "Quantity" to "1"
+        And I set the "Item" "Price" to "1"
+        And I press the "Create Item" button
+        Then I should see the message "Success"
+        When I press the "Clear Order" button
+        And I paste the "Order" "Order Id" field
+        And I press the "Retrieve Order" button
+        Then I should see the message "Success"
+        And I should see "1.00" in the "Order" "Total price" field
+        When I set the "Item" "Quantity" to "2"
+        And I press the "Update Item" button
+        Then I should see the message "Success"
+        When I press the "Clear Order" button
+        And I paste the "Order" "Order Id" field
+        And I press the "Retrieve Order" button
+        Then I should see the message "Success"
+        And I should see "2.00" in the "Order" "Total price" field
