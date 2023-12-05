@@ -503,4 +503,32 @@ $(function () {
 
     });
 
+
+    // ****************************************
+    // Retrieve an Item
+    // ****************************************
+
+    $("#retrieve-item-btn").click(function () {
+
+        let item_id = $("#item_item_id").val();
+        let order_id = $("#item_order_id").val();
+
+        $("#flash_message").empty();
+        
+        let ajax = $.ajax({
+            type: "GET",
+            url: `/orders/${order_id}/items/${item_id}`,
+            contentType: "application/json"
+        });
+
+        ajax.done(function(res){
+            update_item_form_data(res)
+            flash_message("Success")
+        });
+
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
+    });
+
 })
