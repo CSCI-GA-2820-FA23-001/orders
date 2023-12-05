@@ -129,8 +129,10 @@ def delete_items(order_id, item_id):
 
     # See if the item exists and delete it if it does
     item = Item.find(item_id)
+    order = Order.find(order_id)
     if item:
         item.delete()
+    order.update()
 
     return make_response("", status.HTTP_204_NO_CONTENT)
 
@@ -178,11 +180,12 @@ def update_items(order_id, item_id):
             status.HTTP_404_NOT_FOUND,
             f"Item with id '{item_id}' could not be found.",
         )
-
+    order = Order.find(order_id)
     # Update from the json in the body of the request
     item.deserialize(request.get_json())
     item.id = item_id
     item.update()
+    order.update()
 
     return make_response(jsonify(item.serialize()), status.HTTP_200_OK)
 
