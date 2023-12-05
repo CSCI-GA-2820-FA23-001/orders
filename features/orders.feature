@@ -148,6 +148,35 @@ Feature: The orders service
         And I press the "Create Item" button
         Then I should see the message "Success"
 
+    Scenario: List all items
+        When I visit the "Home Page"
+        And I set the "Order" "Customer_ID" to "1"
+        And I select "Pending" in the "Order" "Status" dropdown
+        And I press the "Create Order" button
+        Then I should see the message "Success"
+        When I copy the "Order" "Order Id" field
+        And I paste the "Item" "Order Id" field
+        And I set the "Item" "Name" to "food"
+        And I set the "Item" "Description" to "This is food"
+        And I set the "Item" "Quantity" to "1"
+        And I set the "Item" "Price" to "1"
+        And I press the "Create Item" button
+        Then I should see the message "Success"
+        When I copy the "Item" "Order Id" field
+        And I press the "Clear Item" button
+        Then the "Item" "Order Id" field should be empty
+        And the "Item" "Item ID" field should be empty
+        And the "Item" "Name" field should be empty
+        And the "Item" "Description" field should be empty
+        And the "Item" "Quantity" field should be empty
+        And the "Item" "Price" field should be empty
+        When I paste the "Item" "Order Id" field
+        And I press the "List Item" button
+        Then I should see the message "Success"
+        And I should see "This is food" in the "Item" results
+        And I should see "1" in the "Item" results
+        And I should not see "CANCELED" in the "Item" results
+
     Scenario: Retrieve an Item
         When I visit the "Home Page"
         And I set the "Order" "Customer_ID" to "1"
