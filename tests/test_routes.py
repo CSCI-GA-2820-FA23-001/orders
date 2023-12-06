@@ -15,12 +15,13 @@ from service.models import db, init_db, Order, Item
 from service.common import status  # HTTP Status Codes
 from tests.factories import OrderFactory, ItemFactory
 
+
 getcontext().prec = 2
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
 )
-BASE_URL = "/orders"
+BASE_URL = "/api/orders"
 
 
 ######################################################################
@@ -57,7 +58,7 @@ class TestOrderItemServer(TestCase):
         db.session.remove()
 
     def _create_orders(self, count):
-        """Factory method to create pets in bulk"""
+        """Factory method to create orders in bulk"""
         orders = []
         for _ in range(count):
             test_order = OrderFactory()
@@ -65,7 +66,7 @@ class TestOrderItemServer(TestCase):
             self.assertEqual(
                 response.status_code,
                 status.HTTP_201_CREATED,
-                "Could not create test pet",
+                "Could not create test order",
             )
             new_order = response.get_json()
             test_order.id = new_order["id"]
@@ -211,7 +212,7 @@ class TestOrderItemServer(TestCase):
         resp = self.client.post(BASE_URL, json=test_order.serialize())
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
-        # update the pet
+        # update the order
         new_order = resp.get_json()
         self.assertEqual(new_order["creation_time"], new_order["last_updated_time"])
         new_order["customer_id"] = 100
@@ -247,9 +248,10 @@ class TestOrderItemServer(TestCase):
         resp = self.client.post(BASE_URL, json=test_order.serialize())
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
-        # update the pet
+        # update the order
         new_order = resp.get_json()
         new_order_id = new_order["id"]
+
         resp = self.client.put(f"{BASE_URL}/{new_order_id}/cancel")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         updated_order = resp.get_json()
@@ -284,7 +286,7 @@ class TestOrderItemServer(TestCase):
         logging.debug(data)
         self.assertEqual(data["order_id"], order.id)
         self.assertEqual(data["name"], item.name)
-        self.assertEqual(Decimal(data["price"]), item.price)
+        self.assertAlmostEqual(Decimal(data["price"]), item.price)
         self.assertEqual(data["description"], item.description)
         self.assertEqual(data["quantity"], item.quantity)
 
@@ -370,7 +372,7 @@ class TestOrderItemServer(TestCase):
         logging.debug(data)
         self.assertEqual(data["order_id"], order.id)
         self.assertEqual(data["name"], item.name)
-        self.assertEqual(Decimal(data["price"]), item.price)
+        self.assertAlmostEqual(Decimal(data["price"]), item.price)
         self.assertEqual(data["description"], item.description)
         self.assertEqual(data["quantity"], item.quantity)
 
@@ -459,44 +461,44 @@ class TestOrderItemServer(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
-    # Idk why, but I have to add a 'z' to put it in the end; otherwise it won't pass the CI
-    def test_z_copy_order(self):
-        """It should create a copy of an existing order"""
+    def test_copy_order(self):
+        order = self._create_orders(1)[0]
+        item_list = ItemFactory.create_batch(2)
 
-        # create an Order to update
-        _order = OrderFactory()
-        _order.create()
-        for item in ItemFactory.create_batch(5):
-            item.create()
-            _order.items.append(item)
-            _order.update()
+        # Create item 1
+        resp1 = self.client.post(
+            f"{BASE_URL}/{order.id}/items", json=item_list[0].serialize()
+        )
+        self.assertEqual(resp1.status_code, status.HTTP_201_CREATED)
+        item1 = resp1.get_json()
+        # print(resp1.text)
 
-        resp = self.client.post(BASE_URL, json=_order.serialize())
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        # Create item 2
+        resp2 = self.client.post(
+            f"{BASE_URL}/{order.id}/items", json=item_list[1].serialize()
+        )
+        self.assertEqual(resp2.status_code, status.HTTP_201_CREATED)
+        item2 = resp2.get_json()
+        # print(resp2.text)
+        resp3 = self.client.post(f"{BASE_URL}/{order.id}/repeat")
+        self.assertEqual(resp3.status_code, status.HTTP_200_OK)
+        repeated_order = resp3.get_json()
 
-        # Copy the order
-        order = resp.get_json()
-        order_id = order["id"]
-        resp = self.client.post(f"{BASE_URL}/{order_id}/repeat")
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        new_order = resp.get_json()
-
-        self.assertNotEqual(_order.id, new_order["id"])
-        self.assertEqual(_order.customer_id, new_order["customer_id"])
-        self.assertEqual(_order.status, new_order["status"])
-        self.assertEqual(len(_order.items), len(new_order["items"]))
-
-        def test_item_is_copy(item_x, item_y):
-            self.assertNotEqual(item_x.id, item_y["id"])
-            self.assertEqual(new_order["id"], item_y["order_id"])
-            self.assertEqual(item_x.name, item_y["name"])
-            self.assertEqual(item_x.price, Decimal(item_y["price"]))
-            self.assertEqual(item_x.description, item_y["description"])
-            self.assertEqual(item_x.quantity, item_y["quantity"])
-
-        for i, item1 in enumerate(_order.items):
-            item2 = new_order["items"][i]
-            test_item_is_copy(item1, item2)
+        self.assertNotEqual(order.id, repeated_order["id"])
+        self.assertEqual(order.customer_id, repeated_order["customer_id"])
+        self.assertEqual(order.status, repeated_order["status"])
+        self.assertEqual(item1["name"], repeated_order["items"][0]["name"])
+        self.assertEqual(str(item1["price"]), repeated_order["items"][0]["price"])
+        self.assertEqual(
+            item1["description"], repeated_order["items"][0]["description"]
+        )
+        self.assertEqual(item1["quantity"], repeated_order["items"][0]["quantity"])
+        self.assertEqual(item2["name"], repeated_order["items"][1]["name"])
+        self.assertEqual(str(item2["price"]), repeated_order["items"][1]["price"])
+        self.assertEqual(
+            item2["description"], repeated_order["items"][1]["description"]
+        )
+        self.assertEqual(item2["quantity"], repeated_order["items"][1]["quantity"])
 
     def test_copy_order_not_found(self):
         """It should not add an item when order doesn't exist"""

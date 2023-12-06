@@ -8,6 +8,9 @@ import unittest
 from service import app
 from service.models import Order, Item, DataValidationError, db
 from tests.factories import OrderFactory, ItemFactory
+from decimal import Decimal, getcontext
+
+getcontext().prec = 2
 
 
 DATABASE_URI = os.getenv(
@@ -395,7 +398,7 @@ class TestOrder(unittest.TestCase):
             self.assertNotEqual(item_x.id, item_y.id)
             self.assertEqual(new_order.id, item_y.order_id)
             self.assertEqual(item_x.name, item_y.name)
-            self.assertEqual(item_x.price, item_y.price)
+            self.assertEqual(item_x.price, Decimal(item_y.price))
             self.assertEqual(item_x.description, item_y.description)
             self.assertEqual(item_x.quantity, item_y.quantity)
 

@@ -113,6 +113,7 @@ class Item(db.Model, PersistentBase):
             self.order_id = data["order_id"]
             self.name = data["name"]
             self.price = Decimal(data["price"])
+            # self.price = data["price"]
             self.description = data["description"]
             self.quantity = int(data["quantity"])
         except KeyError as error:
@@ -152,7 +153,7 @@ class Item(db.Model, PersistentBase):
         other.deserialize(self.serialize())
         other.id = None
         other.create()
-
+        other.price = str(other.price)
         return other
 
 
@@ -260,7 +261,7 @@ class Order(db.Model, PersistentBase):
         # Calculate the total_price for the order
 
         self.total_price = self.get_total_price()
-        print(self.total_price)
+        # print(self.total_price)
 
         db.session.commit()
 
@@ -323,5 +324,7 @@ class Order(db.Model, PersistentBase):
         for item in other.items:
             item.order_id = other.id
         other.update()
-
+        other.total_price = str(other.total_price)
+        for item in other.items:
+            item.price = str(item.price)
         return other
