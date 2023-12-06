@@ -6,10 +6,8 @@ All of the models are stored in this module
 import logging
 from abc import abstractmethod
 from datetime import datetime, timedelta
-from decimal import Decimal, getcontext
 from flask_sqlalchemy import SQLAlchemy
 
-getcontext().prec = 2
 
 logger = logging.getLogger("flask.app")
 
@@ -112,7 +110,7 @@ class Item(db.Model, PersistentBase):
         try:
             self.order_id = data["order_id"]
             self.name = data["name"]
-            self.price = Decimal(data["price"])
+            self.price = data["price"]
             # self.price = data["price"]
             self.description = data["description"]
             self.quantity = int(data["quantity"])
@@ -153,7 +151,7 @@ class Item(db.Model, PersistentBase):
         other.deserialize(self.serialize())
         other.id = None
         other.create()
-        other.price = str(other.price)
+        # other.price = str(other.price)
         return other
 
 
@@ -225,10 +223,14 @@ class Order(db.Model, PersistentBase):
 
     def get_total_price(self) -> float:
         """It can calculate the total price of the order"""
-        total = Decimal(0)
-        for item in self.items:
-            total += Decimal(item.price) * item.quantity
+        # total = Decimal(0)
+        # for item in self.items:
+        #     total += Decimal(item.price) * item.quantity
 
+        total = 0.0
+        for item in self.items:
+            total += float(item.price) * item.quantity
+        total = round(total, 2)
         return total
 
     def create(self):
@@ -324,7 +326,7 @@ class Order(db.Model, PersistentBase):
         for item in other.items:
             item.order_id = other.id
         other.update()
-        other.total_price = str(other.total_price)
-        for item in other.items:
-            item.price = str(item.price)
+        # other.total_price = other.total_price
+        # for item in other.items:
+        #     item.price = item.price
         return other

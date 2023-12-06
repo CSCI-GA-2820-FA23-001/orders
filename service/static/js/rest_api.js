@@ -369,6 +369,13 @@ $(function () {
     $("#list-item-btn").click(function () {
 
         let order_id = $("#item_order_id").val();
+        //console.log(order_id)
+        if (order_id===''){
+            flash_message("Enter order ID")
+        }
+        else{
+            
+        
 
         // let queryString = ""
 
@@ -432,6 +439,8 @@ $(function () {
         ajax.fail(function(res){
             flash_message(res.responseJSON.message)
         });
+
+    }
 
     });
 

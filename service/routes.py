@@ -191,7 +191,7 @@ class OrdersResource(Resource):
         Deletes an Order
         This endpoint will delete an Order with the ID given.
         """
-        app.logger.info("Request to delete an order with order ID %d", order_id)
+        app.logger.info("Request to delete an order with order ID %s", order_id)
 
         # See if the order exists and delete if it exists
         order = Order.find(order_id)
@@ -213,14 +213,15 @@ class OrdersCollection(Resource):
     # LIST ALL ORDERS
     # ------------------------------------------------------------------
     @api.doc("list_orders")
-    @api.expect(orders_args, validate=True)
-    @api.marshal_list_with(orders_model)
+    @api.expect(orders_args, validate=False)
+    # @api.marshal_list_with(orders_model)
     def get(self):
         """Returns all of the Orders"""
         app.logger.info("Request for Order list")
         orders = []
-
+        print(orders)
         args = orders_args.parse_args()
+        print(args)
         customer_id = args["customer_id"]
         date = args["date"]
         order_status = args["status"]
@@ -275,7 +276,7 @@ class CancelResource(Resource):
         Cancel an Order
         This endpoint will cancel an Order with the ID given.
         """
-        app.logger.info("Request to cancel an order with order ID %d", order_id)
+        app.logger.info("Request to cancel an order with order ID %s", order_id)
 
         # See if the order exists and delete if it exists
         order = Order.find(order_id)
@@ -309,7 +310,7 @@ class RepeatResource(Resource):
         Repeat an Order
         This endpoint will repeat an Order with the ID given.
         """
-        app.logger.info("Request to repeat an order with order ID %d", order_id)
+        app.logger.info("Request to repeat an order with order ID %s", order_id)
 
         # See if the order exists and delete if it exists
         order = Order.find(order_id)

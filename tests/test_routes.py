@@ -9,14 +9,10 @@ import os
 import logging
 from unittest import TestCase
 from datetime import datetime
-from decimal import Decimal, getcontext
 from service import app
 from service.models import db, init_db, Order, Item
 from service.common import status  # HTTP Status Codes
 from tests.factories import OrderFactory, ItemFactory
-
-
-getcontext().prec = 2
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
@@ -173,7 +169,7 @@ class TestOrderItemServer(TestCase):
             "Customer Id does not match",
         )
         self.assertEqual(
-            Decimal(new_order["total_price"]),
+            new_order["total_price"],
             order.total_price,
             "Total price does not match",
         )
@@ -194,7 +190,7 @@ class TestOrderItemServer(TestCase):
             new_order["customer_id"], order.customer_id, "Customer Id does not match"
         )
         self.assertEqual(
-            Decimal(new_order["total_price"]),
+            new_order["total_price"],
             order.total_price,
             "Total price does not match",
         )
@@ -286,7 +282,7 @@ class TestOrderItemServer(TestCase):
         logging.debug(data)
         self.assertEqual(data["order_id"], order.id)
         self.assertEqual(data["name"], item.name)
-        self.assertAlmostEqual(Decimal(data["price"]), item.price)
+        self.assertAlmostEqual(data["price"], item.price)
         self.assertEqual(data["description"], item.description)
         self.assertEqual(data["quantity"], item.quantity)
 
@@ -372,7 +368,7 @@ class TestOrderItemServer(TestCase):
         logging.debug(data)
         self.assertEqual(data["order_id"], order.id)
         self.assertEqual(data["name"], item.name)
-        self.assertAlmostEqual(Decimal(data["price"]), item.price)
+        self.assertAlmostEqual(data["price"], item.price)
         self.assertEqual(data["description"], item.description)
         self.assertEqual(data["quantity"], item.quantity)
 
