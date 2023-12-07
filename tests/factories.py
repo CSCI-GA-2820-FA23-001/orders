@@ -26,10 +26,6 @@ from factory.fuzzy import (
 )
 from service.models import Order, Item
 
-
-
-
-
 class FuzzyDecimal(factory.fuzzy.BaseFuzzyAttribute):
     """
     Generate random Decimal values
