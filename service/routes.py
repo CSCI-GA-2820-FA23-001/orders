@@ -19,11 +19,10 @@ POST /orders/{id}/repeat - creates a copy of an existing Order in the database
 PUT /orders/{id}/cancel - cancels an order
 """
 
-from flask import jsonify, request, url_for, abort, make_response
-from flask_restx import Resource, fields, reqparse, inputs
+from flask import jsonify, abort
+from flask_restx import Resource, fields, reqparse
 from service.common import status  # HTTP Status Codes
 from service.models import Order, Item
-import json
 
 # Import Flask application
 from . import app, api
@@ -141,7 +140,6 @@ class OrdersResource(Resource):
         app.logger.info("Request for Order with id: %s", order_id)
         # See if the order exists and abort if it doesn't
         order = Order.find(order_id)
-        
         if not order:
             abort(
                 status.HTTP_404_NOT_FOUND,
@@ -218,7 +216,6 @@ class OrdersCollection(Resource):
         """Returns all of the Orders"""
         app.logger.info("Request for Order list")
         orders = []
-        
         args = orders_args.parse_args()
         customer_id = args["customer_id"]
         date = args["date"]
