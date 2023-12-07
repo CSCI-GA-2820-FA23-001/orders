@@ -132,7 +132,6 @@ class OrdersResource(Resource):
     # ------------------------------------------------------------------
     @api.doc("get_order")
     @api.response(404, "Order not found")
-    @api.marshal_with(orders_model)
     def get(self, order_id):
         """
         Retrieve a single Order
@@ -140,9 +139,9 @@ class OrdersResource(Resource):
         This endpoint will return an Order based on it's id
         """
         app.logger.info("Request for Order with id: %s", order_id)
-
         # See if the order exists and abort if it doesn't
         order = Order.find(order_id)
+        
         if not order:
             abort(
                 status.HTTP_404_NOT_FOUND,
@@ -219,9 +218,8 @@ class OrdersCollection(Resource):
         """Returns all of the Orders"""
         app.logger.info("Request for Order list")
         orders = []
-        print(orders)
+        
         args = orders_args.parse_args()
-        print(args)
         customer_id = args["customer_id"]
         date = args["date"]
         order_status = args["status"]
@@ -288,9 +286,6 @@ class CancelResource(Resource):
         order.status = "Canceled"
         order.update()
         # changing prices to strings because Decimals can't be serialized
-        for item in order.items:
-            item.price = str(item.price)
-        order.total_price = str(order.total_price)
 
         return order.serialize(), status.HTTP_200_OK
 

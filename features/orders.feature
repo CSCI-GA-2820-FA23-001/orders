@@ -195,7 +195,7 @@ Feature: The orders service
         And I paste the "Order" "Order Id" field
         And I press the "Retrieve Order" button
         Then I should see the message "Success"
-        And I should see "1.00" in the "Order" "Total price" field
+        And I should see "1" in the "Order" "Total price" field
         When I copy the "Item" "Item Id" field
         And I press the "Clear Item" button
         And I paste the "Item" "Item Id" field
@@ -226,12 +226,12 @@ Feature: The orders service
         And I paste the "Order" "Order Id" field
         And I press the "Retrieve Order" button
         Then I should see the message "Success"
-        And I should see "1.00" in the "Order" "Total price" field
+        And I should see "1" in the "Order" "Total price" field
         When I press the "Delete Item" button
         Then I should see the message "Success"
         When I press the "Retrieve Order" button
         Then I should see the message "Success"
-        And I should see "0.00" in the "Order" "Total price" field
+        And I should see "0" in the "Order" "Total price" field
 
     Scenario: Update an Item
         When I visit the "Home Page"
@@ -251,7 +251,7 @@ Feature: The orders service
         And I paste the "Order" "Order Id" field
         And I press the "Retrieve Order" button
         Then I should see the message "Success"
-        And I should see "1.00" in the "Order" "Total price" field
+        And I should see "1" in the "Order" "Total price" field
         When I set the "Item" "Quantity" to "2"
         And I press the "Update Item" button
         Then I should see the message "Success"
@@ -259,4 +259,4 @@ Feature: The orders service
         And I paste the "Order" "Order Id" field
         And I press the "Retrieve Order" button
         Then I should see the message "Success"
-        And I should see "2.00" in the "Order" "Total price" field
+        And I should see "2" in the "Order" "Total price" field

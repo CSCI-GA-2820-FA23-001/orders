@@ -162,13 +162,13 @@ class TestOrderItemServer(TestCase):
 
         # Check the data is correct
         new_order = resp.get_json()
-        print(new_order)
+        # print(new_order)
         self.assertEqual(
             new_order["customer_id"],
             order.customer_id,
             "Customer Id does not match",
         )
-        self.assertEqual(
+        self.assertAlmostEqual(
             new_order["total_price"],
             order.total_price,
             "Total price does not match",
@@ -189,7 +189,7 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(
             new_order["customer_id"], order.customer_id, "Customer Id does not match"
         )
-        self.assertEqual(
+        self.assertAlmostEqual(
             new_order["total_price"],
             order.total_price,
             "Total price does not match",
@@ -251,7 +251,7 @@ class TestOrderItemServer(TestCase):
         resp = self.client.put(f"{BASE_URL}/{new_order_id}/cancel")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         updated_order = resp.get_json()
-        print(updated_order)
+        # print(updated_order)
         self.assertEqual(updated_order["status"], "Canceled")
 
     def test_bad_request(self):
@@ -458,6 +458,7 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_copy_order(self):
+        """It should create a copy of an existing order"""
         order = self._create_orders(1)[0]
         item_list = ItemFactory.create_batch(2)
 
@@ -484,13 +485,13 @@ class TestOrderItemServer(TestCase):
         self.assertEqual(order.customer_id, repeated_order["customer_id"])
         self.assertEqual(order.status, repeated_order["status"])
         self.assertEqual(item1["name"], repeated_order["items"][0]["name"])
-        self.assertEqual(str(item1["price"]), repeated_order["items"][0]["price"])
+        self.assertAlmostEqual(item1["price"], repeated_order["items"][0]["price"])
         self.assertEqual(
             item1["description"], repeated_order["items"][0]["description"]
         )
         self.assertEqual(item1["quantity"], repeated_order["items"][0]["quantity"])
         self.assertEqual(item2["name"], repeated_order["items"][1]["name"])
-        self.assertEqual(str(item2["price"]), repeated_order["items"][1]["price"])
+        self.assertAlmostEqual(item2["price"], repeated_order["items"][1]["price"])
         self.assertEqual(
             item2["description"], repeated_order["items"][1]["description"]
         )

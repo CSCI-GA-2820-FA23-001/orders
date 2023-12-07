@@ -79,7 +79,7 @@ class Item(db.Model, PersistentBase):
         db.Integer, db.ForeignKey("order.id", ondelete="CASCADE"), nullable=False
     )
     name = db.Column(db.String(64))
-    price = db.Column(db.Numeric(10, 2))
+    price = db.Column(db.Float)
     description = db.Column(db.String(128))
     quantity = db.Column(db.Integer)
 
@@ -168,7 +168,7 @@ class Order(db.Model, PersistentBase):
     creation_time = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     last_updated_time = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     items = db.relationship("Item", backref="order", passive_deletes=True)
-    total_price = db.Column(db.Numeric(10, 2))
+    total_price = db.Column(db.Float)
     status = db.Column(db.String(32))
 
     def __repr__(self):
