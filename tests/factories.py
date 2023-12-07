@@ -17,7 +17,6 @@ Test Factory to make fake objects for testing
 """
 
 from datetime import datetime
-from decimal import Decimal, getcontext
 import factory
 from factory.fuzzy import (
     FuzzyChoice,
@@ -26,9 +25,6 @@ from factory.fuzzy import (
     FuzzyText,
 )
 from service.models import Order, Item
-
-
-getcontext().prec = 2
 
 
 class FuzzyDecimal(factory.fuzzy.BaseFuzzyAttribute):
@@ -44,7 +40,7 @@ class FuzzyDecimal(factory.fuzzy.BaseFuzzyAttribute):
 
     def fuzz(self):
         value = FuzzyFloat(self.low, self.high).fuzz()
-        return Decimal(str(round(value, self.precision)))
+        return round(value, self.precision)
 
 
 class OrderFactory(factory.Factory):
@@ -60,7 +56,7 @@ class OrderFactory(factory.Factory):
     customer_id = FuzzyInteger(0, 100)
     creation_time = datetime.now()
     last_updated_time = datetime.now()
-    total_price = Decimal(0)
+    total_price = 0.0
     status = FuzzyChoice(
         choices=["shipped", "cancelled", "finished", "delivered", "submitted"]
     )

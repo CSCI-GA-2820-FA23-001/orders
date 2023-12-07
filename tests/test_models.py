@@ -9,7 +9,6 @@ from service import app
 from service.models import Order, Item, DataValidationError, db
 from tests.factories import OrderFactory, ItemFactory
 
-
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
 )
@@ -60,14 +59,14 @@ class TestOrder(unittest.TestCase):
             status=fake_order.status,
             total_price=fake_order.total_price,
         )
-        print(repr(order))
+        # print(repr(order))
         self.assertIsNotNone(order)
         self.assertEqual(order.id, None)
         self.assertEqual(order.customer_id, fake_order.customer_id)
         self.assertEqual(order.creation_time, fake_order.creation_time)
         self.assertEqual(order.last_updated_time, fake_order.last_updated_time)
         self.assertEqual(order.status, fake_order.status)
-        self.assertEqual(order.total_price, fake_order.total_price)
+        self.assertAlmostEqual(order.total_price, fake_order.total_price)
 
     def test_add_an_order(self):
         """It should Create an Order and add it to the database"""
@@ -93,7 +92,7 @@ class TestOrder(unittest.TestCase):
         self.assertEqual(found_order.creation_time, order.creation_time)
         self.assertEqual(found_order.last_updated_time, order.last_updated_time)
         self.assertEqual(found_order.status, order.status)
-        self.assertEqual(found_order.total_price, order.total_price)
+        self.assertAlmostEqual(found_order.total_price, order.total_price)
         self.assertEqual(found_order.items, [])
 
     def test_update_order(self):
@@ -188,13 +187,13 @@ class TestOrder(unittest.TestCase):
             serial_order["last_updated_time"], order.last_updated_time.isoformat()
         )
         self.assertEqual(serial_order["status"], order.status)
-        self.assertEqual(serial_order["total_price"], order.total_price)
+        self.assertAlmostEqual(serial_order["total_price"], order.total_price)
         self.assertEqual(len(serial_order["items"]), 1)
         items = serial_order["items"]
         self.assertEqual(items[0]["id"], item.id)
         self.assertEqual(items[0]["order_id"], item.order_id)
         self.assertEqual(items[0]["name"], item.name)
-        self.assertEqual(items[0]["price"], item.price)
+        self.assertAlmostEqual(items[0]["price"], item.price)
         self.assertEqual(items[0]["description"], item.description)
         self.assertEqual(items[0]["quantity"], item.quantity)
 
@@ -209,7 +208,7 @@ class TestOrder(unittest.TestCase):
         new_order.deserialize(serial_order)
         self.assertEqual(new_order.customer_id, order.customer_id)
         self.assertEqual(new_order.status, order.status)
-        self.assertEqual(new_order.total_price, order.total_price)
+        self.assertAlmostEqual(new_order.total_price, order.total_price)
 
     def test_deserialize_order_with_key_error(self):
         """It should not Deserialize an Order with a KeyError"""
@@ -237,7 +236,7 @@ class TestOrder(unittest.TestCase):
         self.assertEqual(orders, [])
         order = OrderFactory()
         order.create()
-        print(order.total_price)
+        # print(order.total_price)
 
         # fake_item = ItemFactory()
         # pylint: disable=unexpected-keyword-arg
@@ -250,7 +249,7 @@ class TestOrder(unittest.TestCase):
         )
         # order.items.append(item)
         item.create()
-        print(repr(item))
+        # print(repr(item))
 
         order.update()
 
@@ -263,10 +262,10 @@ class TestOrder(unittest.TestCase):
         self.assertEqual(len(orders), 1)
         # order = Order.find(order.id)
         self.assertEqual(len(order.items), 1)
-        self.assertEqual(order.items[0].price, item.price)
+        self.assertAlmostEqual(order.items[0].price, item.price)
         self.assertEqual(order.items[0].quantity, item.quantity)
-        print(order.total_price)
-        self.assertEqual(order.total_price, item.price * item.quantity)
+        # print(order.total_price)
+        self.assertAlmostEqual(order.total_price, item.price * item.quantity)
 
         new_order = Order.find(order.id)
         self.assertEqual(new_order.items[0].name, item.name)
@@ -284,7 +283,7 @@ class TestOrder(unittest.TestCase):
         new_order = Order.find(order.id)
         self.assertEqual(len(new_order.items), 2)
         self.assertEqual(new_order.items[1].name, item2.name)
-        self.assertEqual(
+        self.assertAlmostEqual(
             order.total_price, item.price * item.quantity + item2.price * item2.quantity
         )
 
@@ -299,14 +298,14 @@ class TestOrder(unittest.TestCase):
         # Assert that it was assigned an id and shows up in the database
         self.assertIsNotNone(order.id)
         self.assertEqual(order.creation_time, order.last_updated_time)
-        self.assertEqual(order.total_price, item.price * item.quantity)
+        self.assertAlmostEqual(order.total_price, item.price * item.quantity)
         orders = Order.all()
         self.assertEqual(len(orders), 1)
 
         # Fetch it back
         order = Order.find(order.id)
         old_item = order.items[0]
-        print("%r", old_item)
+        # print("%r", old_item)
         self.assertEqual(old_item.name, item.name)
         # Change the city
         old_item.name = "drink"
@@ -323,7 +322,7 @@ class TestOrder(unittest.TestCase):
 
         order = Order.find(order.id)
         self.assertNotEqual(order.creation_time, order.last_updated_time)
-        self.assertEqual(order.total_price, 0)
+        self.assertAlmostEqual(order.total_price, 0)
 
     def test_delete_order_item(self):
         """It should Delete an order's item"""
@@ -395,7 +394,7 @@ class TestOrder(unittest.TestCase):
             self.assertNotEqual(item_x.id, item_y.id)
             self.assertEqual(new_order.id, item_y.order_id)
             self.assertEqual(item_x.name, item_y.name)
-            self.assertEqual(item_x.price, item_y.price)
+            self.assertAlmostEqual(item_x.price, item_y.price)
             self.assertEqual(item_x.description, item_y.description)
             self.assertEqual(item_x.quantity, item_y.quantity)
 

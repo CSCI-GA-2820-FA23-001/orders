@@ -6,10 +6,8 @@ All of the models are stored in this module
 import logging
 from abc import abstractmethod
 from datetime import datetime, timedelta
-from decimal import Decimal, getcontext
 from flask_sqlalchemy import SQLAlchemy
 
-getcontext().prec = 2
 
 logger = logging.getLogger("flask.app")
 
@@ -81,7 +79,7 @@ class Item(db.Model, PersistentBase):
         db.Integer, db.ForeignKey("order.id", ondelete="CASCADE"), nullable=False
     )
     name = db.Column(db.String(64))
-    price = db.Column(db.Numeric(10, 2))
+    price = db.Column(db.Float)
     description = db.Column(db.String(128))
     quantity = db.Column(db.Integer)
 
@@ -112,7 +110,8 @@ class Item(db.Model, PersistentBase):
         try:
             self.order_id = data["order_id"]
             self.name = data["name"]
-            self.price = Decimal(data["price"])
+            self.price = data["price"]
+            # self.price = data["price"]
             self.description = data["description"]
             self.quantity = int(data["quantity"])
         except KeyError as error:
@@ -152,7 +151,7 @@ class Item(db.Model, PersistentBase):
         other.deserialize(self.serialize())
         other.id = None
         other.create()
-
+        # other.price = str(other.price)
         return other
 
 
@@ -169,7 +168,7 @@ class Order(db.Model, PersistentBase):
     creation_time = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     last_updated_time = db.Column(db.DateTime(), nullable=False, default=datetime.now())
     items = db.relationship("Item", backref="order", passive_deletes=True)
-    total_price = db.Column(db.Numeric(10, 2))
+    total_price = db.Column(db.Float)
     status = db.Column(db.String(32))
 
     def __repr__(self):
@@ -224,10 +223,10 @@ class Order(db.Model, PersistentBase):
 
     def get_total_price(self) -> float:
         """It can calculate the total price of the order"""
-        total = Decimal(0)
+        total = 0.0
         for item in self.items:
-            total += Decimal(item.price) * item.quantity
-
+            total += float(item.price) * item.quantity
+        total = round(total, 2)
         return total
 
     def create(self):
@@ -260,7 +259,7 @@ class Order(db.Model, PersistentBase):
         # Calculate the total_price for the order
 
         self.total_price = self.get_total_price()
-        print(self.total_price)
+        # print(self.total_price)
 
         db.session.commit()
 
@@ -323,5 +322,7 @@ class Order(db.Model, PersistentBase):
         for item in other.items:
             item.order_id = other.id
         other.update()
-
+        # other.total_price = other.total_price
+        # for item in other.items:
+        #     item.price = item.price
         return other

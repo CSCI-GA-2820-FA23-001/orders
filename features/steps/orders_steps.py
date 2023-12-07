@@ -36,7 +36,7 @@ def step_impl(context):
     """Delete all Recommendations and load new ones"""
 
     # List all of the orders and delete them one by one
-    rest_endpoint = f"{context.base_url}/orders"
+    rest_endpoint = f"{context.base_url}/api/orders"
     context.resp = requests.get(rest_endpoint)
     assert context.resp.status_code == HTTP_200_OK
     for rec in context.resp.json():

@@ -71,7 +71,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "POST",
-            url: "/orders",
+            url: "/api/orders",
             contentType: "application/json",
             data: JSON.stringify(data),
         });
@@ -108,7 +108,7 @@ $(function () {
 
         let ajax = $.ajax({
                 type: "PUT",
-                url: `/orders/${order_id}`,
+                url: `/api/orders/${order_id}`,
                 contentType: "application/json",
                 data: JSON.stringify(data)
             })
@@ -136,7 +136,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/orders/${order_id}`,
+            url: `/api/orders/${order_id}`,
             contentType: "application/json",
             data: ''
         })
@@ -166,7 +166,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "PUT",
-            url: `/orders/${order_id}/cancel`,
+            url: `/api/orders/${order_id}/cancel`,
             contentType: "application/json"
         });
 
@@ -192,7 +192,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "DELETE",
-            url: `/orders/${order_id}`,
+            url: `/api/orders/${order_id}`,
             contentType: "application/json"
         });
 
@@ -218,7 +218,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "POST",
-            url: `/orders/${order_id}/repeat`,
+            url: `/api/orders/${order_id}/repeat`,
             contentType: "application/json"
         });
 
@@ -280,7 +280,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/orders?${queryString}`,
+            url: `/api/orders?${queryString}`,
             contentType: "application/json",
             data: ''
         })
@@ -347,7 +347,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "POST",
-            url: `/orders/${order_id}/items`,
+            url: `/api/orders/${order_id}/items`,
             contentType: "application/json",
             data: JSON.stringify(data),
         });
@@ -370,31 +370,11 @@ $(function () {
 
         let order_id = $("#item_order_id").val();
 
-        // let queryString = ""
-
-        // if (customer_id) {
-        //     queryString += 'customer_id=' + customer_id
-        // }
-        // if (creation_time) {
-        //     if (queryString.length > 0) {
-        //         queryString += '&date=' + creation_time
-        //     } else {
-        //         queryString += 'date=' + creation_time
-        //     }
-        // }
-        // if (status) {
-        //     if (queryString.length > 0) {
-        //         queryString += '&status=' + status
-        //     } else {
-        //         queryString += 'status=' + status
-        //     }
-        // }
-
         $("#flash_message").empty();
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/orders/${order_id}/items`,
+            url: `/api/orders/${order_id}/items`,
             contentType: "application/json",
             data: ''
         })
@@ -433,6 +413,8 @@ $(function () {
             flash_message(res.responseJSON.message)
         });
 
+    
+
     });
 
     // ****************************************
@@ -448,7 +430,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "DELETE",
-            url: `/orders/${order_id}/items/${item_id}`,
+            url: `/api/orders/${order_id}/items/${item_id}`,
             contentType: "application/json"
         });
 
@@ -487,7 +469,7 @@ $(function () {
 
         let ajax = $.ajax({
                 type: "PUT",
-                url: `/orders/${order_id}/items/${item_id}`,
+                url: `/api/orders/${order_id}/items/${item_id}`,
                 contentType: "application/json",
                 data: JSON.stringify(data)
             })
@@ -517,7 +499,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "GET",
-            url: `/orders/${order_id}/items/${item_id}`,
+            url: `/api/orders/${order_id}/items/${item_id}`,
             contentType: "application/json"
         });
 
