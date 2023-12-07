@@ -365,7 +365,7 @@ class TestOrder(unittest.TestCase):
         self.assertEqual(len(items), 5)
         self.assertEqual(len(order.items), 5)
 
-    def test_copy_an_order(self):
+    def test_z_copy_an_order(self):
         """It should make a duplicate of an order and save to the database"""
 
         orders = Order.all()
