@@ -223,10 +223,6 @@ class Order(db.Model, PersistentBase):
 
     def get_total_price(self) -> float:
         """It can calculate the total price of the order"""
-        # total = Decimal(0)
-        # for item in self.items:
-        #     total += Decimal(item.price) * item.quantity
-
         total = 0.0
         for item in self.items:
             total += float(item.price) * item.quantity

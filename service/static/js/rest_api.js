@@ -369,33 +369,6 @@ $(function () {
     $("#list-item-btn").click(function () {
 
         let order_id = $("#item_order_id").val();
-        //console.log(order_id)
-        if (order_id===''){
-            flash_message("Enter order ID")
-        }
-        else{
-            
-        
-
-        // let queryString = ""
-
-        // if (customer_id) {
-        //     queryString += 'customer_id=' + customer_id
-        // }
-        // if (creation_time) {
-        //     if (queryString.length > 0) {
-        //         queryString += '&date=' + creation_time
-        //     } else {
-        //         queryString += 'date=' + creation_time
-        //     }
-        // }
-        // if (status) {
-        //     if (queryString.length > 0) {
-        //         queryString += '&status=' + status
-        //     } else {
-        //         queryString += 'status=' + status
-        //     }
-        // }
 
         $("#flash_message").empty();
 
@@ -440,7 +413,7 @@ $(function () {
             flash_message(res.responseJSON.message)
         });
 
-    }
+    
 
     });
 
