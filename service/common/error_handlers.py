@@ -20,7 +20,7 @@ Module: error_handlers
 from flask import jsonify
 from service.models import DataValidationError
 from service import app
-from . import status
+from . import status  # pylint: disable=no-name-in-module
 
 
 # ######################################################################
