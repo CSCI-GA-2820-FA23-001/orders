@@ -5,6 +5,13 @@ FROM rofrano/pipeline-selenium:latest
 ARG USERNAME=vscode
 USER $USERNAME
 
+# Create the user with passwordless sudo privileges
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/bash \
+    && usermod -aG sudo $USERNAME \
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
+    
 # Install user mode tools
 COPY .devcontainer/scripts/install-tools.sh /tmp/
 RUN cd /tmp; bash ./install-tools.sh
