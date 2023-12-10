@@ -1,5 +1,5 @@
 """
-Order Creation and Updation Service
+Order Creation and Updating Service
 
 This microservice handles the lifecycle of Orders and the Items within.
 
@@ -13,8 +13,10 @@ DELETE /orders/{id} - deletes an Order record in the database
 GET /orders/{id}/items - Returns a list all of the Items in the Order with a given id number
 GET /orders/{id}/items/{item id} - Returns an Item with a given item id number
 POST orders/{id}/items - creates a new Item record in the Order with a given id number
-PUT /orders/{id}/items/{item id} - updates an Item record with a given item id in the Order with a given id number
-DELETE /orders/{id}/items/{item id} - deletes an Item record with a given item id in the Order with a given id number
+PUT /orders/{id}/items/{item id} - 
+updates an Item record with a given item id in the Order with a given id number
+DELETE /orders/{id}/items/{item id} - 
+deletes an Item record with a given item id in the Order with a given id number
 POST /orders/{id}/repeat - creates a copy of an existing Order in the database
 PUT /orders/{id}/cancel - cancels an order
 """
@@ -355,9 +357,12 @@ class ItemsResource(Resource):
     ItemsResource class
 
     Allows the manipulation of a single Item
-    GET /orders/<order_id>/items/<item_id> - Returns an Item with the item_id inside order with order_id
-    PUT /orders/<order_id>/items/<item_id> - Update an Item with the item_id inside order with order_id
-    DELETE /orders/<order_id>/items/<item_id> -  Deletes an Item with the item_id inside order with order_id
+    GET /orders/<order_id>/items/<item_id> -
+    Returns an Item with the item_id inside order with order_id
+    PUT /orders/<order_id>/items/<item_id> -
+    Update an Item with the item_id inside order with order_id
+    DELETE /orders/<order_id>/items/<item_id> -
+    Deletes an Item with the item_id inside order with order_id
     """
 
     # ------------------------------------------------------------------
