@@ -11,15 +11,21 @@
 				"[python]": {
 					"editor.defaultFormatter": "ms-python.black-formatter",
 					"editor.formatOnSave": true
-				  },
-				  "markdown-preview-github-styles.colorTheme": "light",
-				  "files.exclude": {
-					  "**/.git": true,
-					  "**/.DS_Store": true,
-					  "**/*.pyc": true,
-					  "**/__pycache__": true,
-					  "**/.pytest_cache": true
-				  }  
+				},
+				"markdown-preview-github-styles.colorTheme": "light",
+				"makefile.extensionOutputFolder": "/tmp",
+				"python.testing.pytestArgs": [
+					"tests"
+				],
+				"python.testing.unittestEnabled": false,
+				"python.testing.pytestEnabled": true,			
+				"files.exclude": {
+					"**/.git": true,
+					"**/.DS_Store": true,
+					"**/*.pyc": true,
+					"**/__pycache__": true,
+					"**/.pytest_cache": true
+				}
 			},
 			"extensions": [
 				"VisualStudioExptTeam.vscodeintellicode",
