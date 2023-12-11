@@ -9,7 +9,7 @@ Flask-SQLAlchemy==3.0.2
 retry2==0.9.5
 #psycopg2==2.9.5 #Replaced due to error, check troubleshooting channel
 #psycopg2-binary==2.9.5 #Commented out
-psycopg-binary==3.1.12 #edited in, if errors it might be this
+psycopg-binary==3.1.12 #note: psycopg[binary] does not work. Not 100% sure of the reason.
 python-dotenv==1.0.0
 
 # Runtime tools
