@@ -15,7 +15,7 @@ from service.common import status  # HTTP Status Codes
 from tests.factories import OrderFactory, ItemFactory
 
 DATABASE_URI = os.getenv(
-    "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
+    "DATABASE_URI", "postgresql+psycopg://postgres:postgres@localhost:5432/testdb"
 )
 BASE_URL = "/api/orders"
 

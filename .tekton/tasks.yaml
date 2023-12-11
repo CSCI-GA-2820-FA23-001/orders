@@ -35,9 +35,6 @@ spec:
   steps:
     - name: green
       image: rofrano/nyu-devops-base:fa23
-      securityContext:
-        privileged: true
-        runAsUser: 0
       workingDir: $(workspaces.source.path)
       env:
        - name: DATABASE_URI
@@ -171,7 +168,7 @@ spec:
     - name: DATABASE_URI
       description: Database URI
       type: string
-      default: "postgresql://postgres:pgs3cr3t@postgres:5432/testdb"
+      default: "postgresql+psycopg://postgres:pgs3cr3t@postgres:5432/testdb"
   steps:
     - name: bdd-tests
       image: rofrano/nyu-devops-base:fa23
@@ -187,7 +184,7 @@ spec:
         set -e
 
         echo "***** Installing dependencies *****"
-        python -m pip install --upgrade pip wheel
+        sudo python -m pip install --upgrade pip wheel
         sudo pip install -qr requirements.txt
 
         echo "***** Running Tests *****"
