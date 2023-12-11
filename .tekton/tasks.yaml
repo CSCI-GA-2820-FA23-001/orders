@@ -168,7 +168,7 @@ spec:
     - name: DATABASE_URI
       description: Database URI
       type: string
-      default: "postgresql://postgres:pgs3cr3t@postgres:5432/testdb"
+      default: "postgresql+psycopg://postgres:pgs3cr3t@postgres:5432/testdb"
   steps:
     - name: bdd-tests
       image: rofrano/nyu-devops-base:fa23

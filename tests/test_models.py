@@ -10,7 +10,7 @@ from service.models import Order, Item, DataValidationError, db
 from tests.factories import OrderFactory, ItemFactory
 
 DATABASE_URI = os.getenv(
-    "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
+    "DATABASE_URI", "postgresql+psycopg://postgres:postgres@localhost:5432/postgres"
 )
 
 

@@ -66,7 +66,7 @@ jobs:
           export FLASK_APP=service:app
           green -vvv --processes=1 --run-coverage --termcolor --minimum-coverage=95
         env:
-          DATABASE_URI: "postgresql://postgres:pgs3cr3t@postgres:5432/testdb"
+          DATABASE_URI: "postgresql+psycopg://postgres:pgs3cr3t@postgres:5432/testdb"
 
       - name: Upload code coverage
         uses: codecov/codecov-action@v3.1.4
