@@ -1,4 +1,7 @@
 # These can be overidden with env vars.
+
+# Changes: All 1.0 replaced with latest. If there is an error try reverting this.
+
 CLUSTER ?= nyu-devops
 
 .PHONY: help
@@ -68,11 +71,11 @@ deploy: ## Deploy the service on local Kubernetes
 .PHONY: build
 build: ## Build image of the app
 	$(info Building image...)
-	docker build -t orders:1.0 .
-	docker tag orders:1.0 cluster-registry:32000/orders:1.0
+	docker build -t orders:latest .
+	docker tag orders:latest cluster-registry:32000/orders:latest
 
 .PHONY: push
 push: ## Push image to local registry
 	$(info Pushing image to local registry...)
-	docker push cluster-registry:32000/orders:1.0
+	docker push cluster-registry:32000/orders:latest
 	curl cluster-registry:32000/v2/_catalog
