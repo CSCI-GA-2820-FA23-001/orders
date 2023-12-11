@@ -17,7 +17,7 @@ spec:
       description: Arguments for green testing
       name: GREEN_ARGS
       type: string
-    - default: petshop
+    - default: orders
       description: Name of the application
       name: APP_NAME
       type: string
@@ -139,7 +139,7 @@ spec:
     - name: deploy-image
       params:
         - name: old_image_name
-          value: 'cluster-registry:32000/petshop:latest'
+          value: 'cluster-registry:32000/orders:latest'
         - name: image_name
           value: $(params.IMAGE_NAME)
         - name: manifest_dir
