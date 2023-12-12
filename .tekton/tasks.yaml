@@ -150,14 +150,14 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: run-behave
+  name: bdd-tests
   labels:
     app.kubernetes.io/version: "0.1"
   annotations:
     tekton.dev/categories: Testing
     tekton.dev/pipelines.minVersion: "0.17.0"
     tekton.dev/tags: test, behave
-    tekton.dev/displayName: "behave tests"
+    tekton.dev/displayName: "bdd-tests"
     tekton.dev/platforms: "linux/amd64"
 spec:
   workspaces:
@@ -185,7 +185,6 @@ spec:
             python -m pip install --upgrade pip wheel
             pip install -qr requirements.txt
 
-            echo "\n*** STARTING APPLICATION ***\n"
             sleep 30
             curl -L -I $(params.BASE_URL)
 
