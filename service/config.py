@@ -10,7 +10,7 @@ DATABASE_URI = os.getenv(
 
 # Configure SQLAlchemy
 SQLALCHEMY_DATABASE_URI = DATABASE_URI
-SQLALCHEMY_POOL_PRE_PING = True #Added in to try to fix some errors, if broken this might be it
+SQLALCHEMY_POOL_PRE_PING = True
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_POOL_SIZE = 20
 
