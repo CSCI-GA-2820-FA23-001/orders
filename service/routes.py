@@ -508,6 +508,5 @@ class ItemsCollection(Resource):
 
         # Prepare a message to return
         message = item.serialize()
-        # print(message)
 
         return message, status.HTTP_201_CREATED
