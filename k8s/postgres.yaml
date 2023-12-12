@@ -27,7 +27,7 @@ spec:
               protocol: TCP
           volumeMounts:
           - name: postgres-storage
-            mountPath: /data
+            mountPath: /var/lib/postgresql
           resources:
             limits:
               cpu: "0.50"
@@ -38,21 +38,8 @@ spec:
       volumes:
       - name: postgres-storage
         persistentVolumeClaim:
-          claimName: postgres-data
+          claimName: postgres-pvc
         # emptyDir: {}
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-data
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: ""
 
 ---
 apiVersion: v1

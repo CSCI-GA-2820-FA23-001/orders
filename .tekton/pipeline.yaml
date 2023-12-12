@@ -71,7 +71,7 @@ spec:
     - name: pylint
       params:
         - name: image
-          value: 'docker.io/rofrano/nyu-devops-base:fa23'
+          value: 'quay.io/rofrano/python:3.11-slim'
         - name: path
           value: service
         - name: requirements_file
@@ -95,7 +95,7 @@ spec:
         - name: SECRET_NAME
           value: postgres-creds
         - name: SECRET_KEY
-          value: database_uri
+          value: uri
       runAfter:
         - git-clone
       taskRef:
