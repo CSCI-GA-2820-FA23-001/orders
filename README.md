@@ -40,6 +40,7 @@ list_orders    GET      /orders
 read_orders    GET      /orders/<int:order_id>                    
 static         GET      /static/<path:filename>                   
 update_orders  PUT      /orders/<int:order_id>
+cancel_orders  PUT      /orders/<int:order_id>/cancel
 ```
 
 These are the RESTful routes for the `items` within orders
