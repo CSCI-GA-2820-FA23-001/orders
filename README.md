@@ -1,4 +1,4 @@
-# NYU DevOps Orders Microservice
+# NYU DevOps Orders
 
 <img src="shopping_cart.png" alt= “map” width="75%" height="75%">
 
