@@ -77,7 +77,7 @@ orders_model = api.inherit(
 orders_args = reqparse.RequestParser()
 orders_args.add_argument(
     "customer_id",
-    type=str,
+    type=int,  # changed from str
     location="args",
     required=False,
     help="List Orders by customer ID",

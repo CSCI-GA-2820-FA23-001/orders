@@ -5,7 +5,8 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Added libraries for PostgreSQL before pip install
-RUN apt-get update && apt-get install -y gcc libpq-dev
+#RUN apt-get update && apt-get install -y gcc libpq-dev 
+#Commented out, no longer needed because the new binary driver doesn't need gcc
 RUN pip install -U pip wheel && \
     pip install --no-cache-dir -r requirements.txt
 
