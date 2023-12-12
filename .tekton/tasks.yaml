@@ -150,46 +150,44 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: bdd-tests
+  name: run-behave
   labels:
     app.kubernetes.io/version: "0.1"
   annotations:
     tekton.dev/categories: Testing
     tekton.dev/pipelines.minVersion: "0.17.0"
-    tekton.dev/tags: python, bdd
-    tekton.dev/displayName: "bdd-tests"
+    tekton.dev/tags: test, behave
+    tekton.dev/displayName: "behave tests"
     tekton.dev/platforms: "linux/amd64"
 spec:
   workspaces:
-    - name: source
+  - name: source  
   description: >-
-    BDD Tests
+    This task will run the use case scenarios automatically
   params:
-    - name: DATABASE_URI
-      description: Database URI
-      type: string
-      default: "postgresql+psycopg://postgres:pgs3cr3t@postgres:5432/testdb"
+  - name: BASE_URL
+    description: The base url to the orders microservice
+    type: string
+    default: "https://orders-matt-j-dong-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com/"
   steps:
-    - name: bdd-tests
-      image: rofrano/nyu-devops-base:fa23
-      workingDir: $(workspaces.source.path)
+    - name: run
+      image: docker.io/rofrano/pipeline-selenium
+      workingDir: /workspace/source 
+      command: ["/bin/bash", "-c"]
       env:
-       - name: DATABASE_URI
-         valueFrom:
-           secretKeyRef:
-             name: $(params.SECRET_NAME)
-             key: $(params.SECRET_KEY)
-      script: |
-        #!/bin/bash
-        set -e
+        - name: BASE_URL
+          value: "$(params.BASE_URL)"
+      args: 
+        - |-
+            #!/bin/bash
+            set -e
+            echo "***** Installing dependencies *****"
+            python -m pip install --upgrade pip wheel
+            pip install -qr requirements.txt
 
-        echo "***** Installing dependencies *****"
-        sudo python -m pip install --upgrade pip wheel
-        sudo pip install -qr requirements.txt
+            echo "\n*** STARTING APPLICATION ***\n"
+            sleep 30
+            curl -L -I $(params.BASE_URL)
 
-        echo "***** Running Tests *****"
-        echo "\n*** STARTING APPLICATION ***\n"
-        gunicorn --log-level=critical --bind=0.0.0.0:8000 service:app &
-        sleep 5
-        curl -i http://localhost:8000/health
-        echo "\n*** SERVER IS RUNNING ***"
+            echo "***** Running BDD *****"
+            behave
